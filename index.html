@@ -59,12 +59,18 @@
         .header { padding: 15px; background: #161b22; text-align: center; border-bottom: 2px solid var(--accent-gold); font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center; }
         .back-btn { background: #333; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 0.9rem; }
         
-        /* أسلوب لعبة التفاحة */
-        #game-board-apple { flex: 1; overflow-y: auto; display: flex; flex-direction: column-reverse; gap: 6px; padding: 10px; align-items: center; }
-        .row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; opacity: 0.3; pointer-events: none; width: 100%; max-width: 300px; }
-        .row.active { opacity: 1; pointer-events: auto; }
-        .brick { height: 45px; background: #2a2f3a; border-radius: 8px; border: 1px solid #444; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 1.5rem; transition: 0.3s; }
+        /* أسلوب لعبة التفاحة الجديد (على خطى نظام الماينز) */
+        #game-board-apple { flex: 1; overflow-y: auto; display: flex; flex-direction: column-reverse; gap: 8px; padding: 10px; align-items: center; }
+        .apple-row-wrapper { width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 4px; opacity: 0.3; pointer-events: none; transition: 0.3s; }
+        .apple-row-wrapper.active { opacity: 1; pointer-events: auto; }
+        .apple-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
+        .apple-brick { height: 40px; background: #2a2f3a; border-radius: 6px; border: 1px solid #444; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; }
+        .apple-reveal-btn { background: var(--accent-gold); color: #000; border: none; padding: 6px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85rem; width: 100%; margin-top: 2px; }
+        .apple-reveal-btn:hover { background: #e6b800; }
         
+        .revealed-apple { background: #1b4332 !important; border-color: #52b788 !important; }
+        .revealed-bomb { background: #4a1515 !important; border-color: #e63946 !important; }
+
         /* أسلوب لعبة Gems & Mines */
         .gems-container { background: rgba(0, 10, 25, 0.98); border: 2px solid var(--accent-gold); padding: 25px 15px; border-radius: 30px; text-align: center; width: 340px; margin: auto; box-shadow: 0 0 15px rgba(255, 215, 0, 0.7); }
         .grid-gems { display: grid; grid-template-columns: repeat(5, 52px); gap: 8px; justify-content: center; margin-top: 15px; padding: 10px; background: rgba(0,0,0,0.5); border-radius: 15px; }
@@ -127,7 +133,7 @@
         <div class="trial-badge"><span>⚡</span> تجربة مجانية لفترة محدودة</div>
         <input type="text" id="pass-input" placeholder="كلمة المرور">
         <button class="btn-3d" style="background:var(--accent-gold); margin-top: 10px;" onclick="checkPass()">دخول</button>
-        <div class="version-tag">SYSTEM v6.6.0 [SECURE]</div>
+        <div class="version-tag">SYSTEM v6.7.0 [SECURE]</div>
     </div>
 </div>
 
@@ -137,7 +143,7 @@
         <h2>ID LOGIN 🆔</h2>
         <input type="text" id="id-input" placeholder="أدخل الـ ID">
         <button class="btn-3d" style="background:var(--accent-gold); margin-top: 10px;" onclick="checkID()">تنشيط</button>
-        <div class="version-tag">CLIENT AUTH v6.6.0</div>
+        <div class="version-tag">CLIENT AUTH v6.7.0</div>
     </div>
 </div>
 
@@ -167,14 +173,14 @@
             <div class="game-card" onclick="openGame('royal')"><div><span>🍗</span> Royal Feast</div></div>
             <div class="game-card" onclick="openGame('goldmine')"><div><span>⛏️</span> Wild West Gold</div></div>
         </div>
-        <div class="version-tag">MULTI-GAME LOBBY v6.6</div>
+        <div class="version-tag">MULTI-GAME LOBBY v6.7</div>
     </div>
 </div>
 
 <!-- حاوية ألعاب النظام -->
 <div id="main-container" style="display:none; flex-direction:column; height:100%">
     
-    <!-- 1. لعبة تفاحة (Apple) -->
+    <!-- 1. لعبة تفاحة (Apple) بنظام زر الكشف -->
     <div id="game-apple" class="game-section" style="display:none; flex-direction:column; height:100%;">
         <div class="header">
             <button class="back-btn" onclick="returnToLobby()">⬅ القائمة</button>
@@ -183,8 +189,7 @@
         </div>
         <div id="game-board-apple"></div>
         <div class="controls">
-            <button class="btn-3d" style="background:#7f8c8d; color:#fff" onclick="resetRow()">تراجع</button>
-            <button class="btn-3d" id="start-btn" style="background:var(--accent-gold)" onclick="startGameApple()">جولة جديدة</button>
+            <button class="btn-3d" style="background:var(--accent-gold); color:#000" onclick="startGameAppleSetup()"> جولة جديدة 🔄</button>
         </div>
     </div>
 
@@ -223,7 +228,7 @@
         </div>
     </div>
 
-    <!-- 5. لعبة Wild West Gold -->
+    <!-- 4. لعبة Wild West Gold -->
     <div id="game-goldmine" class="game-section" style="display:none; flex-direction:column; height:100%;">
         <div class="header">
             <button class="back-btn" onclick="returnToLobby()">⬅ القائمة</button>
@@ -263,7 +268,7 @@
 <script>
     const P1 = "807055";
     const P2 = ["1726589495", "1724497207", "1307926957", "1706821579", "120240", "1501217291", "20040077", "1690313259", "1690313233", "1690368207", "1690372939", "1698887019", "1698897963", "1699764383", "1726020325", "20040088", "1658356877"];
-    let curRow = 0;
+    let curAppleRow = 0;
     let lastBombs = [];
     
     let appleAttemptUsed = false;
@@ -392,58 +397,77 @@
         return true;
     }
 
-    // --- لعبة التفاحة ---
+    // --- لعبة التفاحة (Apple) بنظام زر الكشف المتسلسل ---
+    let appleRowsData = [];
+
     function startGameAppleSetup() {
         const board = document.getElementById('game-board-apple');
         board.innerHTML = '';
-        curRow = 0;
+        curAppleRow = 0;
+        appleRowsData = [];
         
         for (let i = 0; i < 10; i++) {
+            let bombCount = i < 4 ? 1 : 2;
+            let bombs = [0,1,2,3,4].sort(() => Math.random() - 0.5).slice(0, bombCount);
+            appleRowsData.push(bombs);
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'apple-row-wrapper' + (i === 0 ? ' active' : '');
+            wrapper.id = 'apple-row-' + i;
+
             const rDiv = document.createElement('div');
-            rDiv.className = 'row' + (i === 0 ? ' active' : '');
-            rDiv.id = 'r' + i;
-            let bombs = [0,1,2,3,4].sort(() => Math.random() - 0.5).slice(0, i < 4 ? 1 : 2);
+            rDiv.className = 'apple-row';
+            
             for (let j = 0; j < 5; j++) {
                 const b = document.createElement('div');
-                b.className = 'brick';
-                b.onclick = () => { 
-                    if (i !== curRow) return;
-                    if (!appleAttemptUsed) {
-                        if (getGlobalAttempts() <= 0) { alert("انتهت محاولاتك الثلاثة المتاحة!"); return; }
-                        if (!consumeAttempt()) return;
-                        appleAttemptUsed = true;
-                    }
-                    if (bombs.includes(j)) {
-                        b.style.background = '#e74c3c'; 
-                        b.innerText = '💣'; 
-                    } else {
-                        b.style.background = '#2ecc71'; 
-                        b.innerText = '🍎';
-                        document.getElementById('r'+curRow).classList.remove('active');
-                        curRow++;
-                        if(document.getElementById('r'+curRow)) document.getElementById('r'+curRow).classList.add('active');
-                    }
-                };
+                b.className = 'apple-brick';
+                b.innerText = '🔒';
                 rDiv.appendChild(b);
             }
-            board.appendChild(rDiv);
+            wrapper.appendChild(rDiv);
+
+            const revealBtn = document.createElement('button');
+            revealBtn.className = 'apple-reveal-btn';
+            revealBtn.innerText = `🔍 اكشف الصف (${i + 1})`;
+            revealBtn.onclick = () => revealAppleRow(i);
+            wrapper.appendChild(revealBtn);
+
+            board.appendChild(wrapper);
         }
     }
 
-    function startGameApple() {
-        if (getGlobalAttempts() <= 0 && !appleAttemptUsed) {
-            alert("انتهت محاولاتك الثلاثة المتاحة!");
-            return;
+    function revealAppleRow(rowIdx) {
+        if (rowIdx !== curAppleRow) return;
+
+        if (!appleAttemptUsed) {
+            if (getGlobalAttempts() <= 0) { alert("انتهت محاولاتك الثلاثة المتاحة!"); return; }
+            if (!consumeAttempt()) return;
+            appleAttemptUsed = true;
         }
-        appleAttemptUsed = false;
-        startGameAppleSetup();
-    }
-    
-    function resetRow() { 
-        document.querySelectorAll('#r' + curRow + ' .brick').forEach(b => { 
-            b.style.background = '#2a2f3a'; 
-            b.innerText = ''; 
-        }); 
+
+        const wrapper = document.getElementById('apple-row-chym' + rowIdx) || document.getElementById('apple-row-' + rowIdx);
+        const bricks = wrapper.querySelectorAll('.apple-brick');
+        const btn = wrapper.querySelector('.apple-reveal-btn');
+        btn.style.display = 'none';
+
+        let bombs = appleRowsData[rowIdx];
+        for (let j = 0; j < 5; j++) {
+            if (bombs.includes(j)) {
+                bricks[j].innerText = '💣';
+                bricks[j].className = 'apple-brick revealed-bomb';
+            } else {
+                bricks[j].innerText = '🍎';
+                bricks[j].className = 'apple-brick revealed-apple';
+            }
+        }
+
+        curAppleRow++;
+        if (curAppleRow < 10) {
+            let nextWrapper = document.getElementById('apple-row-' + curAppleRow);
+            if (nextWrapper) nextWrapper.classList.add('active');
+        } else {
+            alert("لقد وصلت لقمة الشجرة وكشفت جميع الخطوات بنجاح! 🏆");
+        }
     }
 
     // --- لعبة Gems & Mines ---
