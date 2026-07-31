@@ -59,64 +59,40 @@
         .header { padding: 15px; background: #161b22; text-align: center; border-bottom: 2px solid var(--accent-gold); font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center; }
         .back-btn { background: #333; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 0.9rem; }
         
-        /* أسلوب لعبة التفاحة الجديد (على خطى نظام الماينز) */
+        /* التنسيق العام لصفوف الكشف للمجموعات */
+        .row-wrapper { width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 4px; opacity: 0.3; pointer-events: none; transition: 0.3s; }
+        .row-wrapper.active { opacity: 1; pointer-events: auto; }
+        .row-cells { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
+        .row-reveal-btn { background: var(--accent-gold); color: #000; border: none; padding: 6px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85rem; width: 100%; margin-top: 2px; }
+        .row-reveal-btn:hover { background: #e6b800; }
+
+        /* لعبة التفاحة (Apple) */
         #game-board-apple { flex: 1; overflow-y: auto; display: flex; flex-direction: column-reverse; gap: 8px; padding: 10px; align-items: center; }
-        .apple-row-wrapper { width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 4px; opacity: 0.3; pointer-events: none; transition: 0.3s; }
-        .apple-row-wrapper.active { opacity: 1; pointer-events: auto; }
-        .apple-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
         .apple-brick { height: 40px; background: #2a2f3a; border-radius: 6px; border: 1px solid #444; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; }
-        .apple-reveal-btn { background: var(--accent-gold); color: #000; border: none; padding: 6px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85rem; width: 100%; margin-top: 2px; }
-        .apple-reveal-btn:hover { background: #e6b800; }
-        
         .revealed-apple { background: #1b4332 !important; border-color: #52b788 !important; }
         .revealed-bomb { background: #4a1515 !important; border-color: #e63946 !important; }
 
-        /* أسلوب لعبة Gems & Mines */
-        .gems-container { background: rgba(0, 10, 25, 0.98); border: 2px solid var(--accent-gold); padding: 25px 15px; border-radius: 30px; text-align: center; width: 340px; margin: auto; box-shadow: 0 0 15px rgba(255, 215, 0, 0.7); }
-        .grid-gems { display: grid; grid-template-columns: repeat(5, 52px); gap: 8px; justify-content: center; margin-top: 15px; padding: 10px; background: rgba(0,0,0,0.5); border-radius: 15px; }
-        .cell-gem { width: 52px; height: 52px; background: #0a1a2a; border: 1px solid #1a3a5a; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 22px; cursor: pointer; transition: 0.3s; }
+        /* لعبة Gems & Mines */
+        .gems-container { background: rgba(0, 10, 25, 0.98); border: 2px solid var(--accent-gold); padding: 20px 15px; border-radius: 25px; text-align: center; width: 340px; margin: auto; box-shadow: 0 0 15px rgba(255, 215, 0, 0.7); display: flex; flex-direction: column; gap: 10px; max-height: 85vh; overflow-y: auto; }
+        .cell-gem { height: 45px; background: #0a1a2a; border: 1px solid #1a3a5a; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
 
-        /* أسلوب لعبة Royal Feast */
-        .royal-container { background: #2b0000; padding: 20px; border-radius: 20px; border: 2px solid #ffd700; width: 100%; max-width: 400px; margin: auto; text-align: center; box-shadow: 0 8px 16px rgba(0,0,0,0.6); }
-        #game-board-royal { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 20px; width: 100%; }
-        .cell-royal { aspect-ratio: 1/1; background: radial-gradient(circle, #ffd700, #b8860b); border-radius: 10px; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; cursor: pointer; border: 2px solid #5d4037; }
-        .revealed { background: #2b0000 !important; }
+        /* لعبة Royal Feast */
+        .royal-container { background: #2b0000; padding: 20px 15px; border-radius: 20px; border: 2px solid #ffd700; width: 100%; max-width: 350px; margin: auto; text-align: center; box-shadow: 0 8px 16px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 10px; max-height: 85vh; overflow-y: auto; }
+        .cell-royal { height: 45px; background: radial-gradient(circle, #ffd700, #b8860b); border-radius: 8px; display: flex; justify-content: center; align-items: center; font-size: 1.4rem; border: 1px solid #5d4037; }
 
-        /* أسلوب لعبة Wild West Gold */
-        .mine-container {
-            background: #1e1e2f;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.8);
-            text-align: center;
-            max-width: 400px;
-            width: 100%;
-            border: 2px solid var(--mine-teal);
-            margin: auto;
-        }
+        /* لعبة Wild West Gold */
+        .mine-container { background: #1e1e2f; padding: 20px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.8); text-align: center; max-width: 400px; width: 100%; border: 2px solid var(--mine-teal); margin: auto; }
         .mine-mode-buttons { display: flex; gap: 15px; justify-content: center; margin-top: 20px; }
-        .mine-mode-btn {
-            background: #252538; color: var(--mine-teal); border: 2px solid var(--mine-teal);
-            padding: 12px 20px; font-size: 16px; border-radius: 8px; cursor: pointer; font-weight: bold; flex: 1; transition: 0.3s;
-        }
+        .mine-mode-btn { background: #252538; color: var(--mine-teal); border: 2px solid var(--mine-teal); padding: 12px 20px; font-size: 16px; border-radius: 8px; cursor: pointer; font-weight: bold; flex: 1; transition: 0.3s; }
         .mine-mode-btn:hover { background: var(--mine-teal); color: #0f172a; box-shadow: 0 0 15px rgba(0,255,204,0.8); }
-        .mine-header-info {
-            display: flex; justify-content: space-between; background: #252538; color: var(--mine-teal);
-            padding: 8px 12px; border-radius: 6px; font-weight: bold; margin-bottom: 15px; font-size: 14px; border: 1px solid var(--mine-teal);
-        }
+        .mine-header-info { display: flex; justify-content: space-between; background: #252538; color: var(--mine-teal); padding: 8px 12px; border-radius: 6px; font-weight: bold; margin-bottom: 15px; font-size: 14px; border: 1px solid var(--mine-teal); }
         .ladder { display: flex; flex-direction: column; gap: 6px; margin-bottom: 15px; }
         .row-level { display: flex; gap: 6px; justify-content: center; }
-        .mine-box {
-            background: #2b2b40; border: 2px solid #444; border-radius: 6px; height: 40px; flex: 1;
-            display: flex; align-items: center; justify-content: center; font-size: 14px; color: #888; font-weight: bold; cursor: pointer; transition: 0.2s;
-        }
+        .mine-box { background: #2b2b40; border: 2px solid #444; border-radius: 6px; height: 40px; flex: 1; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #888; font-weight: bold; cursor: pointer; transition: 0.2s; }
         .mine-box.active { border-color: var(--mine-teal); color: #fff; background: #1a1a2e; box-shadow: 0 0 8px rgba(0,255,204,0.4); }
         .mine-box.revealed-gold { background: #1b4332 !important; border-color: #52b788 !important; color: #52b788 !important; }
         .mine-box.revealed-bomb { background: #4a1515 !important; border-color: #e63946 !important; color: #e63946 !important; }
-        .mine-btn {
-            background: var(--mine-teal); color: #0f172a; border: none; padding: 10px 20px; font-size: 15px;
-            border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s;
-        }
+        .mine-btn { background: var(--mine-teal); color: #0f172a; border: none; padding: 10px 20px; font-size: 15px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; }
         .mine-btn:hover { background: #00b386; }
 
         .controls { padding: 15px; background: #161b22; border-top: 2px solid #333; display: flex; gap: 10px; }
@@ -133,7 +109,7 @@
         <div class="trial-badge"><span>⚡</span> تجربة مجانية لفترة محدودة</div>
         <input type="text" id="pass-input" placeholder="كلمة المرور">
         <button class="btn-3d" style="background:var(--accent-gold); margin-top: 10px;" onclick="checkPass()">دخول</button>
-        <div class="version-tag">SYSTEM v6.7.0 [SECURE]</div>
+        <div class="version-tag">SYSTEM v6.8.0 [SECURE]</div>
     </div>
 </div>
 
@@ -143,11 +119,11 @@
         <h2>ID LOGIN 🆔</h2>
         <input type="text" id="id-input" placeholder="أدخل الـ ID">
         <button class="btn-3d" style="background:var(--accent-gold); margin-top: 10px;" onclick="checkID()">تنشيط</button>
-        <div class="version-tag">CLIENT AUTH v6.7.0</div>
+        <div class="version-tag">CLIENT AUTH v6.8.0</div>
     </div>
 </div>
 
-<!-- شاشة الاتصال بالسيرفر التمويهية -->
+<!-- شاشة الاتصال بالسيرفر -->
 <div id="loading-screen" class="overlay" style="display:none">
     <div class="loading-box">
         <div id="success-icon" class="success-check">✔</div>
@@ -173,14 +149,14 @@
             <div class="game-card" onclick="openGame('royal')"><div><span>🍗</span> Royal Feast</div></div>
             <div class="game-card" onclick="openGame('goldmine')"><div><span>⛏️</span> Wild West Gold</div></div>
         </div>
-        <div class="version-tag">MULTI-GAME LOBBY v6.7</div>
+        <div class="version-tag">MULTI-GAME LOBBY v6.8</div>
     </div>
 </div>
 
-<!-- حاوية ألعاب النظام -->
+<!-- حاوية الألعاب -->
 <div id="main-container" style="display:none; flex-direction:column; height:100%">
     
-    <!-- 1. لعبة تفاحة (Apple) بنظام زر الكشف -->
+    <!-- 1. لعبة Apple -->
     <div id="game-apple" class="game-section" style="display:none; flex-direction:column; height:100%;">
         <div class="header">
             <button class="back-btn" onclick="returnToLobby()">⬅ القائمة</button>
@@ -189,7 +165,7 @@
         </div>
         <div id="game-board-apple"></div>
         <div class="controls">
-            <button class="btn-3d" style="background:var(--accent-gold); color:#000" onclick="startGameAppleSetup()"> جولة جديدة 🔄</button>
+            <button class="btn-3d" style="background:var(--accent-gold); color:#000" onclick="startGameAppleSetup()">جولة جديدة 🔄</button>
         </div>
     </div>
 
@@ -200,14 +176,14 @@
             <span>Gems & Mines 💎</span>
             <span>المحاولات: <span id="att-gems">3</span></span>
         </div>
-        <div style="flex:1; display:flex; justify-content:center; align-items:center;">
+        <div style="flex:1; display:flex; justify-content:center; align-items:center; padding: 10px;">
             <div class="gems-container">
-                <div style="font-size: 20px; color: var(--accent-gold); margin-bottom: 15px; font-weight:bold;">RADAR GEMS</div>
-                <div class="grid-gems" id="gameGridGems"></div>
-                <div style="margin: 15px 0; font-size: 14px; color: var(--blue);">
+                <div style="font-size: 18px; color: var(--accent-gold); font-weight:bold;">RADAR GEMS</div>
+                <div id="game-board-gems" style="display:flex; flex-direction:column; gap:8px;"></div>
+                <div style="font-size: 13px; color: var(--blue);">
                     💎: <span id="gems-count">0</span> | 💣: <span id="bombs-count">0</span>
                 </div>
-                <button class="btn-3d btn-blue" onclick="renderGemsGrid()">NEXT ROUND ⟳</button>
+                <button class="btn-3d btn-blue" style="padding: 10px;" onclick="renderGemsGridSetup()">NEXT ROUND ⟳</button>
             </div>
         </div>
     </div>
@@ -219,11 +195,11 @@
             <span>Royal Feast 🍗</span>
             <span>المحاولات: <span id="att-royal">3</span></span>
         </div>
-        <div style="flex:1; display:flex; justify-content:center; align-items:center; background:#3e0000; padding: 10px;">
+        <div style="flex:1; display:flex; justify-content:center; align-items:center; background:#1b0000; padding: 10px;">
             <div class="royal-container">
-                <h2 id="multiplier" style="color: #ffd700; margin-bottom: 10px;">المضاعف: 1.00</h2>
-                <div id="game-board-royal"></div>
-                <button class="btn-3d" style="background:#b8860b; color:white; margin-top:20px;" onclick="initRoyalGame()">بداية جديدة</button>
+                <h3 id="multiplier" style="color: #ffd700;">المضاعف: 1.00</h3>
+                <div id="game-board-royal" style="display:flex; flex-direction:column; gap:8px;"></div>
+                <button class="btn-3d" style="background:#b8860b; color:white; padding: 10px;" onclick="initRoyalGameSetup()">بداية جديدة 🔄</button>
             </div>
         </div>
     </div>
@@ -246,7 +222,7 @@
                     </div>
                 </div>
 
-                <div id="mineGameArea" class="hidden" style="display:none;">
+                <div id="mineGameArea" style="display:none;">
                     <div class="mine-header-info">
                         <div>الحالة: <span style="color: var(--mine-teal);">متصل بالمتعقب 🟢</span></div>
                         <div>الخطوة: <span id="currentStepText">1</span> / 6</div>
@@ -256,7 +232,7 @@
 
                     <div id="mineMessage" style="font-size: 14px; font-weight: bold; margin: 10px 0; min-height: 25px; color: #ffcc00;">ابدأ من الأسفل واضغط على الخطوة الأولى للكشف!</div>
 
-                    <button id="nextSignalBtn" class="mine-btn hidden" onclick="resetMineVariables()" style="margin-bottom: 8px; display:none;">إرسال إشارة جديدة 🔄</button>
+                    <button id="nextSignalBtn" class="mine-btn" onclick="resetMineVariables()" style="margin-bottom: 8px; display:none;">إرسال إشارة جديدة 🔄</button>
                     <button class="mine-btn" style="background: #333; color: #fff; border: 1px solid #555;" onclick="resetToMineMenu()">تغيير الوضع / القائمة</button>
                 </div>
             </div>
@@ -268,8 +244,6 @@
 <script>
     const P1 = "807055";
     const P2 = ["1726589495", "1724497207", "1307926957", "1706821579", "120240", "1501217291", "20040077", "1690313259", "1690313233", "1690368207", "1690372939", "1698887019", "1698897963", "1699764383", "1726020325", "20040088", "1658356877"];
-    let curAppleRow = 0;
-    let lastBombs = [];
     
     let appleAttemptUsed = false;
     let gemsAttemptUsed = false;
@@ -397,7 +371,8 @@
         return true;
     }
 
-    // --- لعبة التفاحة (Apple) بنظام زر الكشف المتسلسل ---
+    // --- 1. لعبة Apple (نظام الكشف الصفوفي) ---
+    let curAppleRow = 0;
     let appleRowsData = [];
 
     function startGameAppleSetup() {
@@ -412,11 +387,11 @@
             appleRowsData.push(bombs);
 
             const wrapper = document.createElement('div');
-            wrapper.className = 'apple-row-wrapper' + (i === 0 ? ' active' : '');
+            wrapper.className = 'row-wrapper' + (i === 0 ? ' active' : '');
             wrapper.id = 'apple-row-' + i;
 
             const rDiv = document.createElement('div');
-            rDiv.className = 'apple-row';
+            rDiv.className = 'row-cells';
             
             for (let j = 0; j < 5; j++) {
                 const b = document.createElement('div');
@@ -427,8 +402,8 @@
             wrapper.appendChild(rDiv);
 
             const revealBtn = document.createElement('button');
-            revealBtn.className = 'apple-reveal-btn';
-            revealBtn.innerText = `🔍 اكشف الصف (${i + 1})`;
+            revealBtn.className = 'row-reveal-btn';
+            revealBtn.innerText = `🔍 كشف الصف (${i + 1})`;
             revealBtn.onclick = () => revealAppleRow(i);
             wrapper.appendChild(revealBtn);
 
@@ -445,10 +420,9 @@
             appleAttemptUsed = true;
         }
 
-        const wrapper = document.getElementById('apple-row-chym' + rowIdx) || document.getElementById('apple-row-' + rowIdx);
+        const wrapper = document.getElementById('apple-row-' + rowIdx);
         const bricks = wrapper.querySelectorAll('.apple-brick');
-        const btn = wrapper.querySelector('.apple-reveal-btn');
-        btn.style.display = 'none';
+        wrapper.querySelector('.row-reveal-btn').style.display = 'none';
 
         let bombs = appleRowsData[rowIdx];
         for (let j = 0; j < 5; j++) {
@@ -466,115 +440,168 @@
             let nextWrapper = document.getElementById('apple-row-' + curAppleRow);
             if (nextWrapper) nextWrapper.classList.add('active');
         } else {
-            alert("لقد وصلت لقمة الشجرة وكشفت جميع الخطوات بنجاح! 🏆");
+            alert("تم كشف جميع خطوات الشجرة بنجاح! 🏆");
         }
     }
 
-    // --- لعبة Gems & Mines ---
-    function generateSmartBombs() {
-        let bombs = [];
-        if (lastBombs.length > 0 && Math.random() < 0.5) {
-            bombs.push(lastBombs[Math.floor(Math.random() * lastBombs.length)]);
-        }
-        while(bombs.length < 2) {
-            let r = Math.floor(Math.random() * 25);
-            if(!bombs.includes(r)) bombs.push(r);
-        }
-        lastBombs = bombs;
-        return bombs;
-    }
+    // --- 2. لعبة Gems & Mines (نظام الكشف الصفوفي الجديد) ---
+    let curGemsRow = 0;
+    let gemsRowsData = [];
 
     function renderGemsGridSetup() {
-        const grid = document.getElementById('gameGridGems');
-        grid.innerHTML = "";
+        const board = document.getElementById('game-board-gems');
+        board.innerHTML = "";
         document.getElementById('gems-count').innerText = "0";
         document.getElementById('bombs-count').innerText = "0";
-        
-        const currentBombs = generateSmartBombs();
+        curGemsRow = 0;
+        gemsRowsData = [];
 
-        for(let i=0; i<25; i++) {
-            let cell = document.createElement('div');
-            cell.className = 'cell-gem';
-            cell.onclick = () => {
-                if(cell.innerHTML !== "") return;
-                if (!gemsAttemptUsed) {
-                    if (getGlobalAttempts() <= 0) { alert("انتهت محاولاتك الثلاثة المتاحة!"); return; }
-                    if (!consumeAttempt()) return;
-                    gemsAttemptUsed = true;
-                }
-                if(currentBombs.includes(i)) {
-                    cell.innerHTML = "💣"; 
-                    cell.style.background = "rgba(255,0,0,0.3)";
-                    cell.style.borderColor = "#f00";
-                    document.getElementById('bombs-count').innerText = 
-                        parseInt(document.getElementById('bombs-count').innerText) + 1;
-                } else {
-                    cell.innerHTML = "💎"; 
-                    cell.style.background = "rgba(0,212,255,0.2)";
-                    let g = document.getElementById('gems-count');
-                    g.innerText = parseInt(g.innerText) + 1;
-                }
-            };
-            grid.appendChild(cell);
+        for (let i = 0; i < 5; i++) {
+            let bombs = [0,1,2,3,4].sort(() => Math.random() - 0.5).slice(0, 1);
+            gemsRowsData.push(bombs);
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'row-wrapper' + (i === 0 ? ' active' : '');
+            wrapper.id = 'gems-row-' + i;
+
+            const rDiv = document.createElement('div');
+            rDiv.className = 'row-cells';
+            for (let j = 0; j < 5; j++) {
+                const c = document.createElement('div');
+                c.className = 'cell-gem';
+                c.innerText = '🔒';
+                rDiv.appendChild(c);
+            }
+            wrapper.appendChild(rDiv);
+
+            const btn = document.createElement('button');
+            btn.className = 'row-reveal-btn';
+            btn.innerText = `🔍 كشف الصف (${i + 1})`;
+            btn.onclick = () => revealGemsRow(i);
+            wrapper.appendChild(btn);
+
+            board.appendChild(wrapper);
         }
     }
 
-    function renderGemsGrid() {
-        if (getGlobalAttempts() <= 0 && !gemsAttemptUsed) {
-            alert("انتهت محاولاتك الثلاثة المتاحة!");
-            return;
+    function revealGemsRow(rowIdx) {
+        if (rowIdx !== curGemsRow) return;
+
+        if (!gemsAttemptUsed) {
+            if (getGlobalAttempts() <= 0) { alert("انتهت محاولاتك الثلاثة المتاحة!"); return; }
+            if (!consumeAttempt()) return;
+            gemsAttemptUsed = true;
         }
-        gemsAttemptUsed = false;
-        renderGemsGridSetup();
+
+        const wrapper = document.getElementById('gems-row-' + rowIdx);
+        const cells = wrapper.querySelectorAll('.cell-gem');
+        wrapper.querySelector('.row-reveal-btn').style.display = 'none';
+
+        let bombs = gemsRowsData[rowIdx];
+        let foundGems = 0, foundBombs = 0;
+
+        for (let j = 0; j < 5; j++) {
+            if (bombs.includes(j)) {
+                cells[j].innerText = '💣';
+                cells[j].style.background = 'rgba(255,0,0,0.4)';
+                foundBombs++;
+            } else {
+                cells[j].innerText = '💎';
+                cells[j].style.background = 'rgba(0,212,255,0.3)';
+                foundGems++;
+            }
+        }
+
+        document.getElementById('gems-count').innerText = parseInt(document.getElementById('gems-count').innerText) + foundGems;
+        document.getElementById('bombs-count').innerText = parseInt(document.getElementById('bombs-count').innerText) + foundBombs;
+
+        curGemsRow++;
+        if (curGemsRow < 5) {
+            let nextWrapper = document.getElementById('gems-row-' + curGemsRow);
+            if (nextWrapper) nextWrapper.classList.add('active');
+        } else {
+            alert("تم كشف شبكة الأحجار الكريمة بالكامل! 💎");
+        }
     }
 
-    // --- لعبة Royal Feast ---
-    const foodItems = ["🍗", "🥩", "🍰", "🍰", "🫓", "🍕", "🍰", "🍗", "🍕", "🫓", "🍰", "🍕", "🫓", "🥩", "🥩"];
-    const royalMults = [1.21, 1.53, 1.96, 2.53, 3.33, 4.45, 6, 8.3, 11.8, 17.16, 25.74, 40, 65, 110, 200];
-    let royalStep = 0;
+    // --- 3. لعبة Royal Feast (نظام الكشف الصفوفي الجديد) ---
+    let curRoyalRow = 0;
+    let royalRowsData = [];
+    const royalMults = [1.21, 1.53, 1.96, 2.53, 3.33];
 
     function initRoyalGameSetup() {
-        royalStep = 0;
-        document.getElementById('multiplier').innerText = "المضاعف: 1.00";
         const board = document.getElementById('game-board-royal');
         board.innerHTML = "";
-        
-        let randomizedLayout = [...foodItems];
-        for(let i=0; i<10; i++) randomizedLayout.push("☠️");
-        randomizedLayout.sort(() => Math.random() - 0.5);
+        document.getElementById('multiplier').innerText = "المضاعف: 1.00";
+        curRoyalRow = 0;
+        royalRowsData = [];
 
-        randomizedLayout.forEach(item => {
-            const div = document.createElement('div');
-            div.className = 'cell-royal';
-            div.onclick = () => {
-                if(div.classList.contains('revealed')) return;
-                if (!royalAttemptUsed) {
-                    if (getGlobalAttempts() <= 0) { alert("انتهت محاولاتك الثلاثة المتاحة!"); return; }
-                    if (!consumeAttempt()) return;
-                    royalAttemptUsed = true;
-                }
-                div.classList.add('revealed');
-                div.innerHTML = item;
-                if(item !== "☠️") {
-                    document.getElementById('multiplier').innerText = "المضاعف: x" + (royalMults[royalStep++] || "200+");
-                } else {
-                    alert("للأسف! سم.");
-                }
-            };
-            board.appendChild(div);
-        });
-    }
+        for (let i = 0; i < 5; i++) {
+            let poisonIndex = Math.floor(Math.random() * 5);
+            royalRowsData.push(poisonIndex);
 
-    function initRoyalGame() {
-        if (getGlobalAttempts() <= 0 && !royalAttemptUsed) {
-            alert("انتهت محاولاتك الثلاثة المتاحة!");
-            return;
+            const wrapper = document.createElement('div');
+            wrapper.className = 'row-wrapper' + (i === 0 ? ' active' : '');
+            wrapper.id = 'royal-row-' + i;
+
+            const rDiv = document.createElement('div');
+            rDiv.className = 'row-cells';
+            for (let j = 0; j < 5; j++) {
+                const c = document.createElement('div');
+                c.className = 'cell-royal';
+                c.innerText = '❓';
+                rDiv.appendChild(c);
+            }
+            wrapper.appendChild(rDiv);
+
+            const btn = document.createElement('button');
+            btn.className = 'row-reveal-btn';
+            btn.innerText = `🔍 كشف الطبق (${i + 1})`;
+            btn.onclick = () => revealRoyalRow(i);
+            wrapper.appendChild(btn);
+
+            board.appendChild(wrapper);
         }
-        royalAttemptUsed = false;
-        initRoyalGameSetup();
     }
 
-    // --- لعبة Wild West Gold ---
+    function revealRoyalRow(rowIdx) {
+        if (rowIdx !== curRoyalRow) return;
+
+        if (!royalAttemptUsed) {
+            if (getGlobalAttempts() <= 0) { alert("انتهت محاولاتك الثلاثة المتاحة!"); return; }
+            if (!consumeAttempt()) return;
+            royalAttemptUsed = true;
+        }
+
+        const wrapper = document.getElementById('royal-row-' + rowIdx);
+        const cells = wrapper.querySelectorAll('.cell-royal');
+        wrapper.querySelector('.row-reveal-btn').style.display = 'none';
+
+        let poisonIndex = royalRowsData[rowIdx];
+        const foods = ["🍗", "🥩", "🍰", "🍕"];
+
+        for (let j = 0; j < 5; j++) {
+            if (j === poisonIndex) {
+                cells[j].innerText = '☠️';
+                cells[j].style.background = '#8b0000';
+            } else {
+                cells[j].innerText = foods[Math.floor(Math.random() * foods.length)];
+                cells[j].style.background = '#2e7d32';
+            }
+        }
+
+        document.getElementById('multiplier').innerText = "المضاعف: x" + royalMults[rowIdx];
+
+        curRoyalRow++;
+        if (curRoyalRow < 5) {
+            let nextWrapper = document.getElementById('royal-row-' + curRoyalRow);
+            if (nextWrapper) nextWrapper.classList.add('active');
+        } else {
+            alert("تم إكمال الوليمة الملكية بنجاح! 🏆");
+        }
+    }
+
+    // --- 4. لعبة Wild West Gold ---
     let mineMode = 2; 
     let mineCurrentStep = 0; 
     const mineTotalSteps = 6; 
@@ -612,9 +639,6 @@
                 const box = document.createElement('div');
                 box.className = `mine-box ${i === mineCurrentStep ? 'active' : ''}`;
                 box.innerText = i === mineCurrentStep ? "🔍 اكشف" : "🔒 مغلق";
-                box.dataset.step = i;
-                box.dataset.index = j;
-                
                 box.onclick = () => revealMineStep(i);
                 row.appendChild(box);
             }
