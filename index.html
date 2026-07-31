@@ -12,6 +12,7 @@
             --bomb-red: #e74c3c;
             --blue: #00d4ff;
             --neon-green: #00ff66;
+            --mine-teal: #00ffcc;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background-color: var(--bg-color); color: white; font-family: sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
@@ -75,11 +76,42 @@
         .cell-royal { aspect-ratio: 1/1; background: radial-gradient(circle, #ffd700, #b8860b); border-radius: 10px; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; cursor: pointer; border: 2px solid #5d4037; }
         .revealed { background: #2b0000 !important; }
 
-        /* أسلوب لعبة Gold West (رقم 5) */
-        .gold-container { background: #1a120b; border: 2px solid #d4af37; padding: 20px; border-radius: 20px; width: 100%; max-width: 360px; margin: auto; text-align: center; box-shadow: 0 0 20px rgba(212,175,55,0.4); }
-        .grid-gold { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px; }
-        .cell-gold { aspect-ratio: 1/1; background: #2c221e; border: 2px solid #5c4033; border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 2rem; cursor: pointer; transition: 0.3s; }
-        .cell-gold.open { background: #3e2723; border-color: #d4af37; }
+        /* أسلوب لعبة كاشف منجم الذهب (رقم 5 الجديدة) */
+        .mine-container {
+            background: #1e1e2f;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            border: 2px solid var(--mine-teal);
+            margin: auto;
+        }
+        .mine-mode-buttons { display: flex; gap: 15px; justify-content: center; margin-top: 20px; }
+        .mine-mode-btn {
+            background: #252538; color: var(--mine-teal); border: 2px solid var(--mine-teal);
+            padding: 12px 20px; font-size: 16px; border-radius: 8px; cursor: pointer; font-weight: bold; flex: 1; transition: 0.3s;
+        }
+        .mine-mode-btn:hover { background: var(--mine-teal); color: #0f172a; box-shadow: 0 0 15px rgba(0,255,204,0.8); }
+        .mine-header-info {
+            display: flex; justify-content: space-between; background: #252538; color: var(--mine-teal);
+            padding: 8px 12px; border-radius: 6px; font-weight: bold; margin-bottom: 15px; font-size: 14px; border: 1px solid var(--mine-teal);
+        }
+        .ladder { display: flex; flex-direction: column; gap: 6px; margin-bottom: 15px; }
+        .row-level { display: flex; gap: 6px; justify-content: center; }
+        .mine-box {
+            background: #2b2b40; border: 2px solid #444; border-radius: 6px; height: 40px; flex: 1;
+            display: flex; align-items: center; justify-content: center; font-size: 14px; color: #888; font-weight: bold; cursor: pointer; transition: 0.2s;
+        }
+        .mine-box.active { border-color: var(--mine-teal); color: #fff; background: #1a1a2e; box-shadow: 0 0 8px rgba(0,255,204,0.4); }
+        .mine-box.revealed-gold { background: #1b4332 !important; border-color: #52b788 !important; color: #52b788 !important; }
+        .mine-box.revealed-bomb { background: #4a1515 !important; border-color: #e63946 !important; color: #e63946 !important; }
+        .mine-btn {
+            background: var(--mine-teal); color: #0f172a; border: none; padding: 10px 20px; font-size: 15px;
+            border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s;
+        }
+        .mine-btn:hover { background: #00b386; }
 
         .controls { padding: 15px; background: #161b22; border-top: 2px solid #333; display: flex; gap: 10px; }
         .btn-3d { padding: 15px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; color: #000; flex: 1; }
@@ -92,14 +124,10 @@
 <div id="pass-screen" class="overlay">
     <div class="login-box">
         <h2>CORE ACCESS 🔐</h2>
-        
-        <div class="trial-badge">
-            <span>⚡</span> تجربة مجانية لفترة محدودة
-        </div>
-
+        <div class="trial-badge"><span>⚡</span> تجربة مجانية لفترة محدودة</div>
         <input type="text" id="pass-input" placeholder="كلمة المرور">
         <button class="btn-3d" style="background:var(--accent-gold); margin-top: 10px;" onclick="checkPass()">دخول</button>
-        <div class="version-tag">SYSTEM v6.5.0 [SECURE]</div>
+        <div class="version-tag">SYSTEM v6.6.0 [SECURE]</div>
     </div>
 </div>
 
@@ -109,7 +137,7 @@
         <h2>ID LOGIN 🆔</h2>
         <input type="text" id="id-input" placeholder="أدخل الـ ID">
         <button class="btn-3d" style="background:var(--accent-gold); margin-top: 10px;" onclick="checkID()">تنشيط</button>
-        <div class="version-tag">CLIENT AUTH v6.5.0</div>
+        <div class="version-tag">CLIENT AUTH v6.6.0</div>
     </div>
 </div>
 
@@ -137,9 +165,9 @@
             <div class="game-card" onclick="openGame('apple')"><div><span>🍎</span> Apple</div></div>
             <div class="game-card" onclick="openGame('gems')"><div><span>💎</span> Gems & Mines</div></div>
             <div class="game-card" onclick="openGame('royal')"><div><span>🍗</span> Royal Feast</div></div>
-            <div class="game-card" onclick="openGame('goldwest')"><div><span>🤠</span> Gold West</div></div>
+            <div class="game-card" onclick="openGame('goldmine')"><div><span>⛏️</span> سكريبت كاشف المنجم</div></div>
         </div>
-        <div class="version-tag">MULTI-GAME LOBBY v6.5</div>
+        <div class="version-tag">MULTI-GAME LOBBY v6.6</div>
     </div>
 </div>
 
@@ -195,19 +223,39 @@
         </div>
     </div>
 
-    <!-- 5. لعبة Gold West (الجديدة) -->
-    <div id="game-goldwest" class="game-section" style="display:none; flex-direction:column; height:100%;">
+    <!-- 5. لعبة كاشف منجم الذهب (الجديدة كلياً) -->
+    <div id="game-goldmine" class="game-section" style="display:none; flex-direction:column; height:100%;">
         <div class="header">
             <button class="back-btn" onclick="returnToLobby()">⬅ القائمة</button>
-            <span>لعبة Gold West 🤠</span>
-            <span>المحاولات: <span id="att-goldwest">3</span></span>
+            <span>كاشف المنجم ⛏️</span>
+            <span>المحاولات: <span id="att-goldmine">3</span></span>
         </div>
         <div style="flex:1; display:flex; justify-content:center; align-items:center; background:#120c08; padding: 10px;">
-            <div class="gold-container">
-                <h3 style="color: #d4af37; margin-bottom: 5px;">أكياس الذهب الكاوبوي</h3>
-                <div style="font-size: 13px; color: #aaa; margin-bottom: 10px;">اختر الحقيبة الصحيحة واجمع الكنز!</div>
-                <div class="grid-gold" id="game-board-gold"></div>
-                <button class="btn-3d" style="background:#d4af37; color:#1a120b; margin-top:20px; width:100%;" onclick="initGoldWestGame()">جولة جديدة ⟳</button>
+            <div class="mine-container">
+                <!-- الصفحة الأولى داخل اللعبة لاختيار الوضع -->
+                <div id="mineMainMenu">
+                    <h1 style="color: var(--mine-teal); margin-bottom: 10px; font-size: 18px;">🛡️ سكريبت كاشف المنجم 🔓</h1>
+                    <p style="color: #aaa; margin-bottom: 10px; font-size: 13px;">اختر نظام اللعب لتفعيل السكريبت فوراً:</p>
+                    <div class="mine-mode-buttons">
+                        <button class="mine-mode-btn" onclick="initMineGameSession(2)">وضع 2x</button>
+                        <button class="mine-mode-btn" onclick="initMineGameSession(3)">وضع 3x</button>
+                    </div>
+                </div>
+
+                <!-- الصفحة الثانية داخل اللعبة -->
+                <div id="mineGameArea" class="hidden">
+                    <div class="mine-header-info">
+                        <div>الحالة: <span style="color: var(--mine-teal);">متصل بالمتعقب 🟢</span></div>
+                        <div>الخطوة: <span id="currentStepText">1</span> / 6</div>
+                    </div>
+
+                    <div class="ladder" id="ladderContainer"></div>
+
+                    <div id="mineMessage" style="font-size: 14px; font-weight: bold; margin: 10px 0; min-height: 25px; color: #ffcc00;">ابدأ من الأسفل واضغط على الخطوة الأولى للكشف!</div>
+
+                    <button id="nextSignalBtn" class="mine-btn hidden" onclick="resetMineVariables()" style="margin-bottom: 8px;">إرسال إشارة جديدة 🔄</button>
+                    <button class="mine-btn" style="background: #333; color: #fff; border: 1px solid #555;" onclick="resetToMineMenu()">تغيير الوضع / القائمة</button>
+                </div>
             </div>
         </div>
     </div>
@@ -224,7 +272,7 @@
     let appleAttemptUsed = false;
     let gemsAttemptUsed = false;
     let royalAttemptUsed = false;
-    let goldAttemptUsed = false;
+    let mineAttemptUsed = false;
 
     function getGlobalAttempts() {
         let att = localStorage.getItem('global_attempts');
@@ -241,7 +289,7 @@
         if(document.getElementById('att-apple')) document.getElementById('att-apple').innerText = current;
         if(document.getElementById('att-gems')) document.getElementById('att-gems').innerText = current;
         if(document.getElementById('att-royal')) document.getElementById('att-royal').innerText = current;
-        if(document.getElementById('att-goldwest')) document.getElementById('att-goldwest').innerText = current;
+        if(document.getElementById('att-goldmine')) document.getElementById('att-goldmine').innerText = current;
     }
 
     function checkPass() { 
@@ -302,7 +350,6 @@
             return;
         }
 
-        // منع دخول أي لعبة إذا انتهت المحاولات تماماً
         if (getGlobalAttempts() <= 0) {
             alert("انتهت محاولاتك الثلاثة المتاحة لهذا الـ ID!");
             return;
@@ -326,10 +373,11 @@
             document.getElementById('game-royal').style.display = 'flex';
             royalAttemptUsed = false;
             initRoyalGameSetup();
-        } else if(gameName === 'goldwest') {
-            document.getElementById('game-goldwest').style.display = 'flex';
-            goldAttemptUsed = false;
-            initGoldWestGameSetup();
+        } else if(gameName === 'goldmine') {
+            document.getElementById('game-goldmine').style.display = 'flex';
+            mineAttemptUsed = false;
+            document.getElementById('mineMainMenu').style.display = 'block';
+            document.getElementById('mineGameArea').style.display = 'none';
         }
     }
 
@@ -363,13 +411,11 @@
                 b.className = 'brick';
                 b.onclick = () => { 
                     if (i !== curRow) return;
-                    
                     if (!appleAttemptUsed) {
                         if (getGlobalAttempts() <= 0) { alert("انتهت محاولاتك الثلاثة المتاحة!"); return; }
                         if (!consumeAttempt()) return;
                         appleAttemptUsed = true;
                     }
-
                     if (bombs.includes(j)) {
                         b.style.background = '#e74c3c'; 
                         b.innerText = '💣'; 
@@ -430,13 +476,11 @@
             cell.className = 'cell-gem';
             cell.onclick = () => {
                 if(cell.innerHTML !== "") return;
-
                 if (!gemsAttemptUsed) {
                     if (getGlobalAttempts() <= 0) { alert("انتهت محاولاتك الثلاثة المتاحة!"); return; }
                     if (!consumeAttempt()) return;
                     gemsAttemptUsed = true;
                 }
-
                 if(currentBombs.includes(i)) {
                     cell.innerHTML = "💣"; 
                     cell.style.background = "rgba(255,0,0,0.3)";
@@ -483,13 +527,11 @@
             div.className = 'cell-royal';
             div.onclick = () => {
                 if(div.classList.contains('revealed')) return;
-
                 if (!royalAttemptUsed) {
                     if (getGlobalAttempts() <= 0) { alert("انتهت محاولاتك الثلاثة المتاحة!"); return; }
                     if (!consumeAttempt()) return;
                     royalAttemptUsed = true;
                 }
-
                 div.classList.add('revealed');
                 div.innerHTML = item;
                 if(item !== "☠️") {
@@ -511,46 +553,107 @@
         initRoyalGameSetup();
     }
 
-    // --- لعبة Gold West (الجديدة رقم 5) ---
-    function initGoldWestGameSetup() {
-        const board = document.getElementById('game-board-gold');
-        board.innerHTML = "";
-        
-        // شبكة 4x3 تحتوي على أكياس ذهب وصخور أو فخاخ
-        let items = ["💰", "💰", "💰", "💰", "💰", "💎", "💎", "🤠", "❌", "❌", "❌", "❌"];
-        items.sort(() => Math.random() - 0.5);
+    // --- لعبة سكريبت كاشف المنجم (رقم 5 الجديدة المطابقة تماماً لكودك) ---
+    let mineMode = 2; 
+    let mineCurrentStep = 0; 
+    const mineTotalSteps = 6; 
+    let mineWinningPaths = []; 
 
-        items.forEach(item => {
-            const cell = document.createElement('div');
-            cell.className = 'cell-gold';
-            cell.onclick = () => {
-                if(cell.classList.contains('open')) return;
-
-                if (!goldAttemptUsed) {
-                    if (getGlobalAttempts() <= 0) { alert("انتهت محاولاتك الثلاثة المتاحة!"); return; }
-                    if (!consumeAttempt()) return;
-                    goldAttemptUsed = true;
-                }
-
-                cell.classList.add('open');
-                cell.innerHTML = item;
-                if(item === "❌") {
-                    cell.style.background = "#4a1515";
-                } else {
-                    cell.style.background = "#3d2e1e";
-                }
-            };
-            board.appendChild(cell);
-        });
+    function initMineGameSession(selectedMode) {
+        mineMode = selectedMode;
+        document.getElementById('mineMainMenu').style.display = 'none';
+        document.getElementById('mineGameArea').style.display = 'block';
+        resetMineVariables();
     }
 
-    function initGoldWestGame() {
-        if (getGlobalAttempts() <= 0 && !goldAttemptUsed) {
-            alert("انتهت محاولاتك الثلاثة المتاحة!");
-            return;
+    function resetMineVariables() {
+        mineCurrentStep = 0;
+        mineWinningPaths = [];
+        document.getElementById('nextSignalBtn').classList.add('hidden');
+        document.getElementById('mineMessage').innerText = "السكريبت جاهز.. ابدأ من الأسفل للصعود أعلى!";
+
+        for (let i = 0; i < mineTotalSteps; i++) {
+            mineWinningPaths.push(Math.floor(Math.random() * mineMode));
         }
-        goldAttemptUsed = false;
-        initGoldWestGameSetup();
+        buildMineLadder();
+    }
+
+    function buildMineLadder() {
+        const ladder = document.getElementById('ladderContainer');
+        ladder.innerHTML = "";
+
+        for (let i = mineTotalSteps - 1; i >= 0; i--) {
+            const row = document.createElement('div');
+            row.className = 'row-level';
+            row.id = `row-${i}`;
+
+            for (let j = 0; j < mineMode; j++) {
+                const box = document.createElement('div');
+                box.className = `mine-box ${i === mineCurrentStep ? 'active' : ''}`;
+                box.innerText = i === mineCurrentStep ? "🔍 اكشف" : "🔒 مغلق";
+                box.dataset.step = i;
+                box.dataset.index = j;
+                
+                box.onclick = () => revealMineStep(i);
+                row.appendChild(box);
+            }
+            ladder.appendChild(row);
+        }
+        document.getElementById('currentStepText').innerText = mineCurrentStep + 1;
+    }
+
+    function revealMineStep(step) {
+        if (step !== mineCurrentStep) return;
+
+        // خصم المحاولة عند أول ضغطة في كاشف المنجم
+        if (!mineAttemptUsed) {
+            if (getGlobalAttempts() <= 0) { alert("انتهت محاولاتك الثلاثة المتاحة!"); return; }
+            if (!consumeAttempt()) return;
+            mineAttemptUsed = true;
+        }
+
+        const correctIndex = mineWinningPaths[step];
+        const row = document.getElementById(`row-${step}`);
+        const boxes = row.children;
+
+        for (let j = 0; j < boxes.length; j++) {
+            boxes[j].onclick = null;
+            if (j === correctIndex) {
+                boxes[j].innerHTML = "🪙 ذهب";
+                boxes[j].className = "mine-box revealed-gold";
+            } else {
+                boxes[j].innerHTML = "🧨 ديناميت";
+                boxes[j].className = "mine-box revealed-bomb";
+            }
+        }
+
+        mineCurrentStep++;
+        if (mineCurrentStep < mineTotalSteps) {
+            document.getElementById('mineMessage').innerText = "ممتاز! اصعد للخطوة التالية للأعلى ⚡";
+            activateMineCurrentStep();
+        } else {
+            document.getElementById('mineMessage').innerText = "وصلت للقمة وتم كشف جميع الخطوات بنجاح! 🏆";
+            document.getElementById('nextSignalBtn').classList.remove('hidden');
+        }
+        document.getElementById('currentStepText').innerText = Math.min(mineCurrentStep + 1, mineTotalSteps);
+    }
+
+    function activateMineCurrentStep() {
+        if (mineCurrentStep < mineTotalSteps) {
+            const row = document.getElementById(`row-${mineCurrentStep}`);
+            if (row) {
+                for (let box of row.children) {
+                    box.className = "mine-box active";
+                    box.innerText = "🔍 اكشف";
+                    box.onclick = () => revealMineStep(mineCurrentStep);
+                }
+            }
+        }
+    }
+
+    function resetToMineMenu() {
+        document.getElementById('mineGameArea').style.display = 'none';
+        document.getElementById('mineMainMenu').style.display = 'block';
     }
 </script>
 </body>
