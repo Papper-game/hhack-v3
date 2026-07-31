@@ -34,6 +34,15 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
+        /* تأثير التوهج اللامع للعميل أو الأزرار */
+        .glow-effect {
+            animation: clientGlow 1.5s infinite alternate;
+        }
+        @keyframes clientGlow {
+            0% { box-shadow: 0 0 5px var(--accent-gold), inset 0 0 5px rgba(255,204,0,0.2); }
+            100% { box-shadow: 0 0 20px var(--accent-gold), inset 0 0 10px rgba(255,204,0,0.6); border-color: #fff; }
+        }
+
         .trial-badge {
             background: linear-gradient(135deg, rgba(255,204,0,0.15), rgba(0,212,255,0.15));
             border: 1px dashed var(--accent-gold);
@@ -59,28 +68,27 @@
         .header { padding: 15px; background: #161b22; text-align: center; border-bottom: 2px solid var(--accent-gold); font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center; }
         .back-btn { background: #333; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 0.9rem; }
         
-        /* التنسيق العام لصفوف الكشف للمجموعات */
         .row-wrapper { width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 4px; opacity: 0.3; pointer-events: none; transition: 0.3s; }
         .row-wrapper.active { opacity: 1; pointer-events: auto; }
         .row-cells { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
         .row-reveal-btn { background: var(--accent-gold); color: #000; border: none; padding: 6px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85rem; width: 100%; margin-top: 2px; }
         .row-reveal-btn:hover { background: #e6b800; }
 
-        /* لعبة التفاحة (Apple) */
+        /* Apple */
         #game-board-apple { flex: 1; overflow-y: auto; display: flex; flex-direction: column-reverse; gap: 8px; padding: 10px; align-items: center; }
         .apple-brick { height: 40px; background: #2a2f3a; border-radius: 6px; border: 1px solid #444; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; }
         .revealed-apple { background: #1b4332 !important; border-color: #52b788 !important; }
         .revealed-bomb { background: #4a1515 !important; border-color: #e63946 !important; }
 
-        /* لعبة Gems & Mines */
+        /* Gems & Mines */
         .gems-container { background: rgba(0, 10, 25, 0.98); border: 2px solid var(--accent-gold); padding: 20px 15px; border-radius: 25px; text-align: center; width: 340px; margin: auto; box-shadow: 0 0 15px rgba(255, 215, 0, 0.7); display: flex; flex-direction: column; gap: 10px; max-height: 85vh; overflow-y: auto; }
         .cell-gem { height: 45px; background: #0a1a2a; border: 1px solid #1a3a5a; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
 
-        /* لعبة Royal Feast */
+        /* Royal Feast */
         .royal-container { background: #2b0000; padding: 20px 15px; border-radius: 20px; border: 2px solid #ffd700; width: 100%; max-width: 350px; margin: auto; text-align: center; box-shadow: 0 8px 16px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 10px; max-height: 85vh; overflow-y: auto; }
         .cell-royal { height: 45px; background: radial-gradient(circle, #ffd700, #b8860b); border-radius: 8px; display: flex; justify-content: center; align-items: center; font-size: 1.4rem; border: 1px solid #5d4037; }
 
-        /* لعبة Wild West Gold */
+        /* Wild West Gold */
         .mine-container { background: #1e1e2f; padding: 20px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.8); text-align: center; max-width: 400px; width: 100%; border: 2px solid var(--mine-teal); margin: auto; }
         .mine-mode-buttons { display: flex; gap: 15px; justify-content: center; margin-top: 20px; }
         .mine-mode-btn { background: #252538; color: var(--mine-teal); border: 2px solid var(--mine-teal); padding: 12px 20px; font-size: 16px; border-radius: 8px; cursor: pointer; font-weight: bold; flex: 1; transition: 0.3s; }
@@ -109,21 +117,21 @@
         <div class="trial-badge"><span>⚡</span> تجربة مجانية لفترة محدودة</div>
         <input type="text" id="pass-input" placeholder="كلمة المرور">
         <button class="btn-3d" style="background:var(--accent-gold); margin-top: 10px;" onclick="checkPass()">دخول</button>
-        <div class="version-tag">SYSTEM v6.8.0 [SECURE]</div>
+        <div class="version-tag">SYSTEM v6.9.0 [SECURE]</div>
     </div>
 </div>
 
-<!-- شاشة الـ ID -->
+<!-- شاشة الـ ID مع التوهج -->
 <div id="id-screen" class="overlay" style="display:none">
-    <div class="login-box">
+    <div class="login-box glow-effect" id="id-login-box">
         <h2>ID LOGIN 🆔</h2>
         <input type="text" id="id-input" placeholder="أدخل الـ ID">
-        <button class="btn-3d" style="background:var(--accent-gold); margin-top: 10px;" onclick="checkID()">تنشيط</button>
-        <div class="version-tag">CLIENT AUTH v6.8.0</div>
+        <button class="btn-3d" style="background:var(--accent-gold); margin-top: 10px;" onclick="checkID()">تنشيط الاتصال</button>
+        <div class="version-tag">CLIENT AUTH v6.9.0</div>
     </div>
 </div>
 
-<!-- شاشة الاتصال بالسيرفر -->
+<!-- شاشة الاتصال بالسيرفر العام -->
 <div id="loading-screen" class="overlay" style="display:none">
     <div class="loading-box">
         <div id="success-icon" class="success-check">✔</div>
@@ -133,6 +141,18 @@
         </div>
     </div>
     <div class="version-tag" style="bottom: 30px;">ENCRYPTED CONNECTION 256-BIT</div>
+</div>
+
+<!-- شاشة الاتصال الوهمي الخاصة باللعبة المحددة -->
+<div id="game-loading-screen" class="overlay" style="display:none">
+    <div class="loading-box">
+        <div class="success-check" style="display:block; font-size: 2.5rem;">🎮</div>
+        <div id="game-loading-msg" class="loading-text">جاري ربط السكريبت بلعبة الحظ...</div>
+        <div class="neon-bar-container">
+            <div id="game-neon-progress" class="neon-bar"></div>
+        </div>
+    </div>
+    <div class="version-tag" style="bottom: 30px;">GAME ENGINE SYNC v6.9</div>
 </div>
 
 <!-- شاشة اختيار الألعاب (Lobby) -->
@@ -149,7 +169,7 @@
             <div class="game-card" onclick="openGame('royal')"><div><span>🍗</span> Royal Feast</div></div>
             <div class="game-card" onclick="openGame('goldmine')"><div><span>⛏️</span> Wild West Gold</div></div>
         </div>
-        <div class="version-tag">MULTI-GAME LOBBY v6.8</div>
+        <div class="version-tag">MULTI-GAME LOBBY v6.9</div>
     </div>
 </div>
 
@@ -295,7 +315,7 @@
         loadScreen.style.display = 'flex';
         progressBar.style.width = '0%';
         successIcon.style.display = 'none';
-        loadMsg.innerText = "جاري الاتصال بالسيرفر الآمن...";
+        loadMsg.innerText = "جاري الاتصال بالسيرفر الآمن وتفعيل التوهج للعميل...";
 
         setTimeout(() => {
             progressBar.style.width = '40%';
@@ -304,12 +324,12 @@
 
         setTimeout(() => {
             progressBar.style.width = '80%';
-            loadMsg.innerText = "جاري جلب خوارزميات التوقع...";
+            loadMsg.innerText = "جاري جلب خوارزميات التوقع والاتصال...";
         }, 2200);
 
         setTimeout(() => {
             progressBar.style.width = '100%';
-            loadMsg.innerText = "تم الاتصال بنجاح!";
+            loadMsg.innerText = "تم تفعيل العميل بنجاح!";
             successIcon.style.display = 'block';
         }, 3300);
 
@@ -320,6 +340,7 @@
         }, 4200);
     }
 
+    // --- نظام التحميل والاتصال الوهمي عند اختيار اللعبة ---
     function openGame(gameName) {
         if(gameName === 'crash') {
             alert("هذه اللعبة غير متوفرة حالياً ✈️");
@@ -332,29 +353,60 @@
         }
 
         document.getElementById('lobby-screen').style.display = 'none';
-        document.getElementById('main-container').style.display = 'flex';
         
-        document.querySelectorAll('.game-section').forEach(sec => sec.style.display = 'none');
-        updateAttemptsDisplay();
+        // إظهار شاشة الاتصال الوهمي الخاصة باللعبة
+        const gameLoadScreen = document.getElementById('game-loading-screen');
+        const gameProgressBar = document.getElementById('game-neon-progress');
+        const gameLoadMsg = document.getElementById('game-loading-msg');
         
-        if(gameName === 'apple') {
-            document.getElementById('game-apple').style.display = 'flex';
-            appleAttemptUsed = false;
-            startGameAppleSetup();
-        } else if(gameName === 'gems') {
-            document.getElementById('game-gems').style.display = 'flex';
-            gemsAttemptUsed = false;
-            renderGemsGridSetup();
-        } else if(gameName === 'royal') {
-            document.getElementById('game-royal').style.display = 'flex';
-            royalAttemptUsed = false;
-            initRoyalGameSetup();
-        } else if(gameName === 'goldmine') {
-            document.getElementById('game-goldmine').style.display = 'flex';
-            mineAttemptUsed = false;
-            document.getElementById('mineMainMenu').style.display = 'block';
-            document.getElementById('mineGameArea').style.display = 'none';
-        }
+        gameLoadScreen.style.display = 'flex';
+        gameProgressBar.style.width = '0%';
+        
+        let gameTitles = {
+            'apple': 'لعبة Apple 🍎',
+            'gems': 'لعبة Gems & Mines 💎',
+            'royal': 'لعبة Royal Feast 🍗',
+            'goldmine': 'لعبة Wild West Gold ⛏️'
+        };
+
+        gameLoadMsg.innerText = `جاري الاتصال بسيرفر ${gameTitles[gameName]}...`;
+
+        setTimeout(() => {
+            gameProgressBar.style.width = '50%';
+            gameLoadMsg.innerText = "جاري حقن خوارزميات كشف الصفوف...";
+        }, 800);
+
+        setTimeout(() => {
+            gameProgressBar.style.width = '100%';
+            gameLoadMsg.innerText = "تم الاتصال بنجاح وتجهيز الواجهة!";
+        }, 1600);
+
+        setTimeout(() => {
+            gameLoadScreen.style.display = 'none';
+            document.getElementById('main-container').style.display = 'flex';
+            
+            document.querySelectorAll('.game-section').forEach(sec => sec.style.display = 'none');
+            updateAttemptsDisplay();
+            
+            if(gameName === 'apple') {
+                document.getElementById('game-apple').style.display = 'flex';
+                appleAttemptUsed = false;
+                startGameAppleSetup();
+            } else if(gameName === 'gems') {
+                document.getElementById('game-gems').style.display = 'flex';
+                gemsAttemptUsed = false;
+                renderGemsGridSetup();
+            } else if(gameName === 'royal') {
+                document.getElementById('game-royal').style.display = 'flex';
+                royalAttemptUsed = false;
+                initRoyalGameSetup();
+            } else if(gameName === 'goldmine') {
+                document.getElementById('game-goldmine').style.display = 'flex';
+                mineAttemptUsed = false;
+                document.getElementById('mineMainMenu').style.display = 'block';
+                document.getElementById('mineGameArea').style.display = 'none';
+            }
+        }, 2200);
     }
 
     function returnToLobby() {
@@ -371,7 +423,7 @@
         return true;
     }
 
-    // --- 1. لعبة Apple (نظام الكشف الصفوفي) ---
+    // --- 1. لعبة Apple ---
     let curAppleRow = 0;
     let appleRowsData = [];
 
@@ -444,7 +496,7 @@
         }
     }
 
-    // --- 2. لعبة Gems & Mines (نظام الكشف الصفوفي الجديد) ---
+    // --- 2. لعبة Gems & Mines ---
     let curGemsRow = 0;
     let gemsRowsData = [];
 
@@ -524,7 +576,7 @@
         }
     }
 
-    // --- 3. لعبة Royal Feast (نظام الكشف الصفوفي الجديد) ---
+    // --- 3. لعبة Royal Feast ---
     let curRoyalRow = 0;
     let royalRowsData = [];
     const royalMults = [1.21, 1.53, 1.96, 2.53, 3.33];
