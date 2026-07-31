@@ -76,7 +76,7 @@
         .cell-royal { aspect-ratio: 1/1; background: radial-gradient(circle, #ffd700, #b8860b); border-radius: 10px; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; cursor: pointer; border: 2px solid #5d4037; }
         .revealed { background: #2b0000 !important; }
 
-        /* أسلوب لعبة كاشف منجم الذهب (رقم 5 الجديدة) */
+        /* أسلوب لعبة Wild West Gold */
         .mine-container {
             background: #1e1e2f;
             padding: 20px;
@@ -165,7 +165,7 @@
             <div class="game-card" onclick="openGame('apple')"><div><span>🍎</span> Apple</div></div>
             <div class="game-card" onclick="openGame('gems')"><div><span>💎</span> Gems & Mines</div></div>
             <div class="game-card" onclick="openGame('royal')"><div><span>🍗</span> Royal Feast</div></div>
-            <div class="game-card" onclick="openGame('goldmine')"><div><span>⛏️</span> سكريبت كاشف المنجم</div></div>
+            <div class="game-card" onclick="openGame('goldmine')"><div><span>⛏️</span> Wild West Gold</div></div>
         </div>
         <div class="version-tag">MULTI-GAME LOBBY v6.6</div>
     </div>
@@ -178,7 +178,7 @@
     <div id="game-apple" class="game-section" style="display:none; flex-direction:column; height:100%;">
         <div class="header">
             <button class="back-btn" onclick="returnToLobby()">⬅ القائمة</button>
-            <span>لعبة التفاحة 🍎</span>
+            <span>Apple 🍎</span>
             <span>المحاولات: <span id="att-apple">3</span></span>
         </div>
         <div id="game-board-apple"></div>
@@ -192,7 +192,7 @@
     <div id="game-gems" class="game-section" style="display:none; flex-direction:column; height:100%;">
         <div class="header">
             <button class="back-btn" onclick="returnToLobby()">⬅ القائمة</button>
-            <span>لعبة Gems & Mines 💎</span>
+            <span>Gems & Mines 💎</span>
             <span>المحاولات: <span id="att-gems">3</span></span>
         </div>
         <div style="flex:1; display:flex; justify-content:center; align-items:center;">
@@ -211,7 +211,7 @@
     <div id="game-royal" class="game-section" style="display:none; flex-direction:column; height:100%;">
         <div class="header">
             <button class="back-btn" onclick="returnToLobby()">⬅ القائمة</button>
-            <span>لعبة Royal Feast 🍗</span>
+            <span>Royal Feast 🍗</span>
             <span>المحاولات: <span id="att-royal">3</span></span>
         </div>
         <div style="flex:1; display:flex; justify-content:center; align-items:center; background:#3e0000; padding: 10px;">
@@ -223,18 +223,17 @@
         </div>
     </div>
 
-    <!-- 5. لعبة كاشف منجم الذهب (الجديدة كلياً) -->
+    <!-- 5. لعبة Wild West Gold -->
     <div id="game-goldmine" class="game-section" style="display:none; flex-direction:column; height:100%;">
         <div class="header">
             <button class="back-btn" onclick="returnToLobby()">⬅ القائمة</button>
-            <span>كاشف المنجم ⛏️</span>
+            <span>Wild West Gold ⛏️</span>
             <span>المحاولات: <span id="att-goldmine">3</span></span>
         </div>
         <div style="flex:1; display:flex; justify-content:center; align-items:center; background:#120c08; padding: 10px;">
             <div class="mine-container">
-                <!-- الصفحة الأولى داخل اللعبة لاختيار الوضع -->
                 <div id="mineMainMenu">
-                    <h1 style="color: var(--mine-teal); margin-bottom: 10px; font-size: 18px;">🛡️ سكريبت كاشف المنجم 🔓</h1>
+                    <h1 style="color: var(--mine-teal); margin-bottom: 10px; font-size: 18px;">🛡️ Wild West Gold 🔓</h1>
                     <p style="color: #aaa; margin-bottom: 10px; font-size: 13px;">اختر نظام اللعب لتفعيل السكريبت فوراً:</p>
                     <div class="mine-mode-buttons">
                         <button class="mine-mode-btn" onclick="initMineGameSession(2)">وضع 2x</button>
@@ -242,8 +241,7 @@
                     </div>
                 </div>
 
-                <!-- الصفحة الثانية داخل اللعبة -->
-                <div id="mineGameArea" class="hidden">
+                <div id="mineGameArea" class="hidden" style="display:none;">
                     <div class="mine-header-info">
                         <div>الحالة: <span style="color: var(--mine-teal);">متصل بالمتعقب 🟢</span></div>
                         <div>الخطوة: <span id="currentStepText">1</span> / 6</div>
@@ -253,7 +251,7 @@
 
                     <div id="mineMessage" style="font-size: 14px; font-weight: bold; margin: 10px 0; min-height: 25px; color: #ffcc00;">ابدأ من الأسفل واضغط على الخطوة الأولى للكشف!</div>
 
-                    <button id="nextSignalBtn" class="mine-btn hidden" onclick="resetMineVariables()" style="margin-bottom: 8px;">إرسال إشارة جديدة 🔄</button>
+                    <button id="nextSignalBtn" class="mine-btn hidden" onclick="resetMineVariables()" style="margin-bottom: 8px; display:none;">إرسال إشارة جديدة 🔄</button>
                     <button class="mine-btn" style="background: #333; color: #fff; border: 1px solid #555;" onclick="resetToMineMenu()">تغيير الوضع / القائمة</button>
                 </div>
             </div>
@@ -268,7 +266,6 @@
     let curRow = 0;
     let lastBombs = [];
     
-    // متغيرات تتبع خصم المحاولات لكل لعبة على حدة في الجولة الواحدة
     let appleAttemptUsed = false;
     let gemsAttemptUsed = false;
     let royalAttemptUsed = false;
@@ -553,7 +550,7 @@
         initRoyalGameSetup();
     }
 
-    // --- لعبة سكريبت كاشف المنجم (رقم 5 الجديدة المطابقة تماماً لكودك) ---
+    // --- لعبة Wild West Gold ---
     let mineMode = 2; 
     let mineCurrentStep = 0; 
     const mineTotalSteps = 6; 
@@ -569,7 +566,7 @@
     function resetMineVariables() {
         mineCurrentStep = 0;
         mineWinningPaths = [];
-        document.getElementById('nextSignalBtn').classList.add('hidden');
+        document.getElementById('nextSignalBtn').style.display = 'none';
         document.getElementById('mineMessage').innerText = "السكريبت جاهز.. ابدأ من الأسفل للصعود أعلى!";
 
         for (let i = 0; i < mineTotalSteps; i++) {
@@ -605,7 +602,6 @@
     function revealMineStep(step) {
         if (step !== mineCurrentStep) return;
 
-        // خصم المحاولة عند أول ضغطة في كاشف المنجم
         if (!mineAttemptUsed) {
             if (getGlobalAttempts() <= 0) { alert("انتهت محاولاتك الثلاثة المتاحة!"); return; }
             if (!consumeAttempt()) return;
@@ -633,7 +629,7 @@
             activateMineCurrentStep();
         } else {
             document.getElementById('mineMessage').innerText = "وصلت للقمة وتم كشف جميع الخطوات بنجاح! 🏆";
-            document.getElementById('nextSignalBtn').classList.remove('hidden');
+            document.getElementById('nextSignalBtn').style.display = 'block';
         }
         document.getElementById('currentStepText').innerText = Math.min(mineCurrentStep + 1, mineTotalSteps);
     }
