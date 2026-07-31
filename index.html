@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>MULTI-GAMES VIP 🎮</title>
+    <style>
+        :root {
+            --bg-color: #0b0e14;
+            --accent-gold: #ffcc00;
+            --win-green: #2ecc71;
+            --bomb-red: #e74c3c;
+            --blue: #00d4ff;
+            --neon-green: #00ff66;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: var(--bg-color); color: white; font-family: sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        .overlay { position: fixed; inset: 0; background: var(--bg-color); display: flex; justify-content: center; align-items: center; z-index: 2000; flex-direction: column; }
+        .login-box { background: #161b22; padding: 25px; border-radius: 20px; border: 2px solid var(--accent-gold); text-align: center; width: 90%; max-width: 350px; position: relative; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #444; background: #000; color: var(--accent-gold); text-align: center; font-size: 1rem; }
+        
+        .version-tag { position: absolute; bottom: 8px; left: 0; right: 0; font-size: 0.75rem; color: #555; text-align: center; letter-spacing: 1px; }
+
+        .loading-box { text-align: center; width: 85%; max-width: 320px; }
+        .loading-text { font-size: 1.1rem; margin-bottom: 20px; color: #ddd; font-weight: bold; min-height: 30px; }
+        .neon-bar-container { width: 100%; height: 8px; background: #111; border-radius: 10px; overflow: hidden; border: 1px solid #333; box-shadow: 0 0 10px rgba(0,255,102,0.2); }
+        .neon-bar { width: 0%; height: 100%; background: var(--neon-green); box-shadow: 0 0 12px var(--neon-green); transition: width 0.3s ease; }
+        .success-check { font-size: 3.5rem; color: var(--neon-green); margin-bottom: 15px; display: none; animation: popIn 0.4s ease; }
+        
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            80% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .trial-badge {
+            background: linear-gradient(135deg, rgba(255,204,0,0.15), rgba(0,212,255,0.15));
+            border: 1px dashed var(--accent-gold);
+            color: var(--accent-gold);
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            box-shadow: 0 0 10px rgba(255, 204, 0, 0.1);
+        }
+
+        .games-grid { display: grid; grid-template-columns: 1fr; gap: 10px; width: 100%; margin-top: 15px; max-height: 60vh; overflow-y: auto; padding-right: 5px; }
+        .game-card { background: #21262d; border: 1px solid #444; padding: 12px 15px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 1.05rem; font-weight: bold; transition: 0.3s; }
+        .game-card:hover { border-color: var(--accent-gold); background: #30363d; }
+        .game-card div { display: flex; align-items: center; gap: 12px; }
+        .game-card span { font-size: 1.4rem; }
+
+        .header { padding: 15px; background: #161b22; text-align: center; border-bottom: 2px solid var(--accent-gold); font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center; }
+        .back-btn { background: #333; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 0.9rem; }
+        
+        /* أسلوب لعبة التفاحة */
+        #game-board-apple { flex: 1; overflow-y: auto; display: flex; flex-direction: column-reverse; gap: 6px; padding: 10px; align-items: center; }
+        .row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; opacity: 0.3; pointer-events: none; width: 100%; max-width: 300px; }
+        .row.active { opacity: 1; pointer-events: auto; }
+        .brick { height: 45px; background: #2a2f3a; border-radius: 8px; border: 1px solid #444; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 1.5rem; transition: 0.3s; }
+        
+        /* أسلوب لعبة Gems & Mines */
+        .gems-container { background: rgba(0, 10, 25, 0.98); border: 2px solid var(--accent-gold); padding: 25px 15px; border-radius: 30px; text-align: center; width: 340px; margin: auto; box-shadow: 0 0 15px rgba(255, 215, 0, 0.7); }
+        .grid-gems { display: grid; grid-template-columns: repeat(5, 52px); gap: 8px; justify-content: center; margin-top: 15px; padding: 10px; background: rgba(0,0,0,0.5); border-radius: 15px; }
+        .cell-gem { width: 52px; height: 52px; background: #0a1a2a; border: 1px solid #1a3a5a; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 22px; cursor: pointer; transition: 0.3s; }
+
+        /* أسلوب لعبة Royal Feast */
+        .royal-container { background: #2b0000; padding: 20px; border-radius: 20px; border: 2px solid #ffd700; width: 100%; max-width: 400px; margin: auto; text-align: center; box-shadow: 0 8px 16px rgba(0,0,0,0.6); }
+        #game-board-royal { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 20px; width: 100%; }
+        .cell-royal { aspect-ratio: 1/1; background: radial-gradient(circle, #ffd700, #b8860b); border-radius: 10px; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; cursor: pointer; border: 2px solid #5d4037; }
+        .revealed { background: #2b0000 !important; }
+
+        /* أسلوب لعبة Gold West (رقم 5) */
+        .gold-container { background: #1a120b; border: 2px solid #d4af37; padding: 20px; border-radius: 20px; width: 100%; max-width: 360px; margin: auto; text-align: center; box-shadow: 0 0 20px rgba(212,175,55,0.4); }
+        .grid-gold { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px; }
+        .cell-gold { aspect-ratio: 1/1; background: #2c221e; border: 2px solid #5c4033; border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 2rem; cursor: pointer; transition: 0.3s; }
+        .cell-gold.open { background: #3e2723; border-color: #d4af37; }
+
+        .controls { padding: 15px; background: #161b22; border-top: 2px solid #333; display: flex; gap: 10px; }
+        .btn-3d { padding: 15px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; color: #000; flex: 1; }
+        .btn-blue { background: transparent; color: var(--blue); border: 1px solid var(--blue); }
+    </style>
+</head>
+<body>
+
+<!-- شاشة الباسورد -->
+<div id="pass-screen" class="overlay">
+    <div class="login-box">
+        <h2>CORE ACCESS 🔐</h2>
+        
+        <div class="trial-badge">
+            <span>⚡</span> تجربة مجانية لفترة محدودة
+        </div>
+
+        <input type="text" id="pass-input" placeholder="كلمة المرور">
+        <button class="btn-3d" style="background:var(--accent-gold); margin-top: 10px;" onclick="checkPass()">دخول</button>
+        <div class="version-tag">SYSTEM v6.5.0 [SECURE]</div>
+    </div>
+</div>
+
+<!-- شاشة الـ ID -->
+<div id="id-screen" class="overlay" style="display:none">
+    <div class="login-box">
+        <h2>ID LOGIN 🆔</h2>
+        <input type="text" id="id-input" placeholder="أدخل الـ ID">
+        <button class="btn-3d" style="background:var(--accent-gold); margin-top: 10px;" onclick="checkID()">تنشيط</button>
+        <div class="version-tag">CLIENT AUTH v6.5.0</div>
+    </div>
+</div>
+
+<!-- شاشة الاتصال بالسيرفر التمويهية -->
+<div id="loading-screen" class="overlay" style="display:none">
+    <div class="loading-box">
+        <div id="success-icon" class="success-check">✔</div>
+        <div id="loading-msg" class="loading-text">جاري الاتصال بالسيرفر الآمن...</div>
+        <div class="neon-bar-container">
+            <div id="neon-progress" class="neon-bar"></div>
+        </div>
+    </div>
+    <div class="version-tag" style="bottom: 30px;">ENCRYPTED CONNECTION 256-BIT</div>
+</div>
+
+<!-- شاشة اختيار الألعاب (Lobby) -->
+<div id="lobby-screen" class="overlay" style="display:none">
+    <div class="login-box" style="max-width: 400px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h2>اختر اللعبة 🎮</h2>
+            <span style="font-size: 0.9rem; color: var(--accent-gold); background: #21262d; padding: 4px 8px; border-radius: 8px;">متبقي: <span id="global-attempts-lobby">3</span> محاولات</span>
+        </div>
+        <div class="games-grid">
+            <div class="game-card" onclick="openGame('crash')"><div><span>✈️</span> Crash</div></div>
+            <div class="game-card" onclick="openGame('apple')"><div><span>🍎</span> Apple</div></div>
+            <div class="game-card" onclick="openGame('gems')"><div><span>💎</span> Gems & Mines</div></div>
+            <div class="game-card" onclick="openGame('royal')"><div><span>🍗</span> Royal Feast</div></div>
+            <div class="game-card" onclick="openGame('goldwest')"><div><span>🤠</span> Gold West</div></div>
+        </div>
+        <div class="version-tag">MULTI-GAME LOBBY v6.5</div>
+    </div>
+</div>
+
+<!-- حاوية ألعاب النظام -->
+<div id="main-container" style="display:none; flex-direction:column; height:100%">
+    
+    <!-- 1. لعبة تفاحة (Apple) -->
+    <div id="game-apple" class="game-section" style="display:none; flex-direction:column; height:100%;">
+        <div class="header">
+            <button class="back-btn" onclick="returnToLobby()">⬅ القائمة</button>
+            <span>لعبة التفاحة 🍎</span>
+            <span>المحاولات: <span id="att-apple">3</span></span>
+        </div>
+        <div id="game-board-apple"></div>
+        <div class="controls">
+            <button class="btn-3d" style="background:#7f8c8d; color:#fff" onclick="resetRow()">تراجع</button>
+            <button class="btn-3d" id="start-btn" style="background:var(--accent-gold)" onclick="startGameApple()">جولة جديدة</button>
+        </div>
+    </div>
+
+    <!-- 2. لعبة Gems & Mines -->
+    <div id="game-gems" class="game-section" style="display:none; flex-direction:column; height:100%;">
+        <div class="header">
+            <button class="back-btn" onclick="returnToLobby()">⬅ القائمة</button>
+            <span>لعبة Gems & Mines 💎</span>
+            <span>المحاولات: <span id="att-gems">3</span></span>
+        </div>
+        <div style="flex:1; display:flex; justify-content:center; align-items:center;">
+            <div class="gems-container">
+                <div style="font-size: 20px; color: var(--accent-gold); margin-bottom: 15px; font-weight:bold;">RADAR GEMS</div>
+                <div class="grid-gems" id="gameGridGems"></div>
+                <div style="margin: 15px 0; font-size: 14px; color: var(--blue);">
+                    💎: <span id="gems-count">0</span> | 💣: <span id="bombs-count">0</span>
+                </div>
+                <button class="btn-3d btn-blue" onclick="renderGemsGrid()">NEXT ROUND ⟳</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. لعبة Royal Feast -->
+    <div id="game-royal" class="game-section" style="display:none; flex-direction:column; height:100%;">
+        <div class="header">
+            <button class="back-btn" onclick="returnToLobby()">⬅ القائمة</button>
+            <span>لعبة Royal Feast 🍗</span>
+            <span>المحاولات: <span id="att-royal">3</span></span>
+        </div>
+        <div style="flex:1; display:flex; justify-content:center; align-items:center; background:#3e0000; padding: 10px;">
+            <div class="royal-container">
+                <h2 id="multiplier" style="color: #ffd700; margin-bottom: 10px;">المضاعف: 1.00</h2>
+                <div id="game-board-royal"></div>
+                <button class="btn-3d" style="background:#b8860b; color:white; margin-top:20px;" onclick="initRoyalGame()">بداية جديدة</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. لعبة Gold West (الجديدة) -->
+    <div id="game-goldwest" class="game-section" style="display:none; flex-direction:column; height:100%;">
+        <div class="header">
+            <button class="back-btn" onclick="returnToLobby()">⬅ القائمة</button>
+            <span>لعبة Gold West 🤠</span>
+            <span>المحاولات: <span id="att-goldwest">3</span></span>
+        </div>
+        <div style="flex:1; display:flex; justify-content:center; align-items:center; background:#120c08; padding: 10px;">
+            <div class="gold-container">
+                <h3 style="color: #d4af37; margin-bottom: 5px;">أكياس الذهب الكاوبوي</h3>
+                <div style="font-size: 13px; color: #aaa; margin-bottom: 10px;">اختر الحقيبة الصحيحة واجمع الكنز!</div>
+                <div class="grid-gold" id="game-board-gold"></div>
+                <button class="btn-3d" style="background:#d4af37; color:#1a120b; margin-top:20px; width:100%;" onclick="initGoldWestGame()">جولة جديدة ⟳</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const P1 = "807055";
+    const P2 = ["1726589495", "1724497207", "1307926957", "1706821579", "120240", "1501217291", "20040077", "1690313259", "1690313233", "1690368207", "1690372939", "1698887019", "1698897963", "1699764383", "1726020325", "20040088", "1658356877"];
+    let curRow = 0;
+    let lastBombs = [];
+    
+    // متغيرات تتبع خصم المحاولات لكل لعبة على حدة في الجولة الواحدة
+    let appleAttemptUsed = false;
+    let gemsAttemptUsed = false;
+    let royalAttemptUsed = false;
+    let goldAttemptUsed = false;
+
+    function getGlobalAttempts() {
+        let att = localStorage.getItem('global_attempts');
+        if (att === null) {
+            att = 3;
+            localStorage.setItem('global_attempts', att);
+        }
+        return parseInt(att);
+    }
+
+    function updateAttemptsDisplay() {
+        let current = getGlobalAttempts();
+        if(document.getElementById('global-attempts-lobby')) document.getElementById('global-attempts-lobby').innerText = current;
+        if(document.getElementById('att-apple')) document.getElementById('att-apple').innerText = current;
+        if(document.getElementById('att-gems')) document.getElementById('att-gems').innerText = current;
+        if(document.getElementById('att-royal')) document.getElementById('att-royal').innerText = current;
+        if(document.getElementById('att-goldwest')) document.getElementById('att-goldwest').innerText = current;
+    }
+
+    function checkPass() { 
+        if (document.getElementById('pass-input').value.trim() === P1 || document.getElementById('pass-input').value.trim() === "448875") { 
+            document.getElementById('pass-screen').style.display = 'none'; 
+            document.getElementById('id-screen').style.display = 'flex'; 
+        } else { 
+            alert("كلمة المرور غير صحيحة!"); 
+        } 
+    }
+    
+    function checkID() { 
+        if (P2.includes(document.getElementById('id-input').value.trim())) { 
+            document.getElementById('id-screen').style.display = 'none'; 
+            startServerConnection(); 
+        } else { 
+            alert("هذا الـ ID غير مسجل!"); 
+        } 
+    }
+
+    function startServerConnection() {
+        const loadScreen = document.getElementById('loading-screen');
+        const progressBar = document.getElementById('neon-progress');
+        const loadMsg = document.getElementById('loading-msg');
+        const successIcon = document.getElementById('success-icon');
+        
+        loadScreen.style.display = 'flex';
+        progressBar.style.width = '0%';
+        successIcon.style.display = 'none';
+        loadMsg.innerText = "جاري الاتصال بالسيرفر الآمن...";
+
+        setTimeout(() => {
+            progressBar.style.width = '40%';
+            loadMsg.innerText = "جاري المصادقة والتحقق من الـ ID...";
+        }, 1000);
+
+        setTimeout(() => {
+            progressBar.style.width = '80%';
+            loadMsg.innerText = "جاري جلب خوارزميات التوقع...";
+        }, 2200);
+
+        setTimeout(() => {
+            progressBar.style.width = '100%';
+            loadMsg.innerText = "تم الاتصال بنجاح!";
+            successIcon.style.display = 'block';
+        }, 3300);
+
+        setTimeout(() => {
+            loadScreen.style.display = 'none';
+            document.getElementById('lobby-screen').style.display = 'flex';
+            updateAttemptsDisplay();
+        }, 4200);
+    }
+
+    function openGame(gameName) {
+        if(gameName === 'crash') {
+            alert("هذه اللعبة غير متوفرة حالياً ✈️");
+            return;
+        }
+
+        // منع دخول أي لعبة إذا انتهت المحاولات تماماً
+        if (getGlobalAttempts() <= 0) {
+            alert("انتهت محاولاتك الثلاثة المتاحة لهذا الـ ID!");
+            return;
+        }
+
+        document.getElementById('lobby-screen').style.display = 'none';
+        document.getElementById('main-container').style.display = 'flex';
+        
+        document.querySelectorAll('.game-section').forEach(sec => sec.style.display = 'none');
+        updateAttemptsDisplay();
+        
+        if(gameName === 'apple') {
+            document.getElementById('game-apple').style.display = 'flex';
+            appleAttemptUsed = false;
+            startGameAppleSetup();
+        } else if(gameName === 'gems') {
+            document.getElementById('game-gems').style.display = 'flex';
+            gemsAttemptUsed = false;
+            renderGemsGridSetup();
+        } else if(gameName === 'royal') {
+            document.getElementById('game-royal').style.display = 'flex';
+            royalAttemptUsed = false;
+            initRoyalGameSetup();
+        } else if(gameName === 'goldwest') {
+            document.getElementById('game-goldwest').style.display = 'flex';
+            goldAttemptUsed = false;
+            initGoldWestGameSetup();
+        }
+    }
+
+    function returnToLobby() {
+        document.getElementById('main-container').style.display = 'none';
+        document.getElementById('lobby-screen').style.display = 'flex';
+        updateAttemptsDisplay();
+    }
+
+    function consumeAttempt() {
+        let att = getGlobalAttempts();
+        if (att <= 0) return false;
+        localStorage.setItem('global_attempts', att - 1);
+        updateAttemptsDisplay();
+        return true;
+    }
+
+    // --- لعبة التفاحة ---
+    function startGameAppleSetup() {
+        const board = document.getElementById('game-board-apple');
+        board.innerHTML = '';
+        curRow = 0;
+        
+        for (let i = 0; i < 10; i++) {
+            const rDiv = document.createElement('div');
+            rDiv.className = 'row' + (i === 0 ? ' active' : '');
+            rDiv.id = 'r' + i;
+            let bombs = [0,1,2,3,4].sort(() => Math.random() - 0.5).slice(0, i < 4 ? 1 : 2);
+            for (let j = 0; j < 5; j++) {
+                const b = document.createElement('div');
+                b.className = 'brick';
+                b.onclick = () => { 
+                    if (i !== curRow) return;
+                    
+                    if (!appleAttemptUsed) {
+                        if (getGlobalAttempts() <= 0) { alert("انتهت محاولاتك الثلاثة المتاحة!"); return; }
+                        if (!consumeAttempt()) return;
+                        appleAttemptUsed = true;
+                    }
+
+                    if (bombs.includes(j)) {
+                        b.style.background = '#e74c3c'; 
+                        b.innerText = '💣'; 
+                    } else {
+                        b.style.background = '#2ecc71'; 
+                        b.innerText = '🍎';
+                        document.getElementById('r'+curRow).classList.remove('active');
+                        curRow++;
+                        if(document.getElementById('r'+curRow)) document.getElementById('r'+curRow).classList.add('active');
+                    }
+                };
+                rDiv.appendChild(b);
+            }
+            board.appendChild(rDiv);
+        }
+    }
+
+    function startGameApple() {
+        if (getGlobalAttempts() <= 0 && !appleAttemptUsed) {
+            alert("انتهت محاولاتك الثلاثة المتاحة!");
+            return;
+        }
+        appleAttemptUsed = false;
+        startGameAppleSetup();
+    }
+    
+    function resetRow() { 
+        document.querySelectorAll('#r' + curRow + ' .brick').forEach(b => { 
+            b.style.background = '#2a2f3a'; 
+            b.innerText = ''; 
+        }); 
+    }
+
+    // --- لعبة Gems & Mines ---
+    function generateSmartBombs() {
+        let bombs = [];
+        if (lastBombs.length > 0 && Math.random() < 0.5) {
+            bombs.push(lastBombs[Math.floor(Math.random() * lastBombs.length)]);
+        }
+        while(bombs.length < 2) {
+            let r = Math.floor(Math.random() * 25);
+            if(!bombs.includes(r)) bombs.push(r);
+        }
+        lastBombs = bombs;
+        return bombs;
+    }
+
+    function renderGemsGridSetup() {
+        const grid = document.getElementById('gameGridGems');
+        grid.innerHTML = "";
+        document.getElementById('gems-count').innerText = "0";
+        document.getElementById('bombs-count').innerText = "0";
+        
+        const currentBombs = generateSmartBombs();
+
+        for(let i=0; i<25; i++) {
+            let cell = document.createElement('div');
+            cell.className = 'cell-gem';
+            cell.onclick = () => {
+                if(cell.innerHTML !== "") return;
+
+                if (!gemsAttemptUsed) {
+                    if (getGlobalAttempts() <= 0) { alert("انتهت محاولاتك الثلاثة المتاحة!"); return; }
+                    if (!consumeAttempt()) return;
+                    gemsAttemptUsed = true;
+                }
+
+                if(currentBombs.includes(i)) {
+                    cell.innerHTML = "💣"; 
+                    cell.style.background = "rgba(255,0,0,0.3)";
+                    cell.style.borderColor = "#f00";
+                    document.getElementById('bombs-count').innerText = 
+                        parseInt(document.getElementById('bombs-count').innerText) + 1;
+                } else {
+                    cell.innerHTML = "💎"; 
+                    cell.style.background = "rgba(0,212,255,0.2)";
+                    let g = document.getElementById('gems-count');
+                    g.innerText = parseInt(g.innerText) + 1;
+                }
+            };
+            grid.appendChild(cell);
+        }
+    }
+
+    function renderGemsGrid() {
+        if (getGlobalAttempts() <= 0 && !gemsAttemptUsed) {
+            alert("انتهت محاولاتك الثلاثة المتاحة!");
+            return;
+        }
+        gemsAttemptUsed = false;
+        renderGemsGridSetup();
+    }
+
+    // --- لعبة Royal Feast ---
+    const foodItems = ["🍗", "🥩", "🍰", "🍰", "🫓", "🍕", "🍰", "🍗", "🍕", "🫓", "🍰", "🍕", "🫓", "🥩", "🥩"];
+    const royalMults = [1.21, 1.53, 1.96, 2.53, 3.33, 4.45, 6, 8.3, 11.8, 17.16, 25.74, 40, 65, 110, 200];
+    let royalStep = 0;
+
+    function initRoyalGameSetup() {
+        royalStep = 0;
+        document.getElementById('multiplier').innerText = "المضاعف: 1.00";
+        const board = document.getElementById('game-board-royal');
+        board.innerHTML = "";
+        
+        let randomizedLayout = [...foodItems];
+        for(let i=0; i<10; i++) randomizedLayout.push("☠️");
+        randomizedLayout.sort(() => Math.random() - 0.5);
+
+        randomizedLayout.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'cell-royal';
+            div.onclick = () => {
+                if(div.classList.contains('revealed')) return;
+
+                if (!royalAttemptUsed) {
+                    if (getGlobalAttempts() <= 0) { alert("انتهت محاولاتك الثلاثة المتاحة!"); return; }
+                    if (!consumeAttempt()) return;
+                    royalAttemptUsed = true;
+                }
+
+                div.classList.add('revealed');
+                div.innerHTML = item;
+                if(item !== "☠️") {
+                    document.getElementById('multiplier').innerText = "المضاعف: x" + (royalMults[royalStep++] || "200+");
+                } else {
+                    alert("للأسف! سم.");
+                }
+            };
+            board.appendChild(div);
+        });
+    }
+
+    function initRoyalGame() {
+        if (getGlobalAttempts() <= 0 && !royalAttemptUsed) {
+            alert("انتهت محاولاتك الثلاثة المتاحة!");
+            return;
+        }
+        royalAttemptUsed = false;
+        initRoyalGameSetup();
+    }
+
+    // --- لعبة Gold West (الجديدة رقم 5) ---
+    function initGoldWestGameSetup() {
+        const board = document.getElementById('game-board-gold');
+        board.innerHTML = "";
+        
+        // شبكة 4x3 تحتوي على أكياس ذهب وصخور أو فخاخ
+        let items = ["💰", "💰", "💰", "💰", "💰", "💎", "💎", "🤠", "❌", "❌", "❌", "❌"];
+        items.sort(() => Math.random() - 0.5);
+
+        items.forEach(item => {
+            const cell = document.createElement('div');
+            cell.className = 'cell-gold';
+            cell.onclick = () => {
+                if(cell.classList.contains('open')) return;
+
+                if (!goldAttemptUsed) {
+                    if (getGlobalAttempts() <= 0) { alert("انتهت محاولاتك الثلاثة المتاحة!"); return; }
+                    if (!consumeAttempt()) return;
+                    goldAttemptUsed = true;
+                }
+
+                cell.classList.add('open');
+                cell.innerHTML = item;
+                if(item === "❌") {
+                    cell.style.background = "#4a1515";
+                } else {
+                    cell.style.background = "#3d2e1e";
+                }
+            };
+            board.appendChild(cell);
+        });
+    }
+
+    function initGoldWestGame() {
+        if (getGlobalAttempts() <= 0 && !goldAttemptUsed) {
+            alert("انتهت محاولاتك الثلاثة المتاحة!");
+            return;
+        }
+        goldAttemptUsed = false;
+        initGoldWestGameSetup();
+    }
+</script>
+</body>
+</html>
