@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>APPLE HACK VIP 🍎</title>
+    <style>
+        :root {
+            --bg-color: #0b0e14;
+            --accent-gold: #ffcc00;
+            --win-green: #2ecc71;
+            --bomb-red: #e74c3c;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: var(--bg-color); color: white; font-family: sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        .overlay { position: fixed; inset: 0; background: var(--bg-color); display: flex; justify-content: center; align-items: center; z-index: 2000; }
+        .login-box { background: #161b22; padding: 25px; border-radius: 20px; border: 2px solid var(--accent-gold); text-align: center; width: 90%; max-width: 350px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #444; background: #000; color: var(--accent-gold); text-align: center; }
+        
+        .header { padding: 15px; background: #161b22; text-align: center; border-bottom: 2px solid var(--accent-gold); font-size: 1.2rem; }
+        #game-board { flex: 1; overflow-y: auto; display: flex; flex-direction: column-reverse; gap: 6px; padding: 10px; align-items: center; }
+        
+        .row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; opacity: 0.3; pointer-events: none; width: 100%; max-width: 300px; }
+        .row.active { opacity: 1; pointer-events: auto; }
+        .brick { height: 45px; background: #2a2f3a; border-radius: 8px; border: 1px solid #444; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 1.5rem; transition: 0.3s; }
+        
+        .controls { padding: 15px; background: #161b22; border-top: 2px solid #333; display: flex; gap: 10px; }
+        .btn-3d { padding: 15px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; color: #000; flex: 1; }
+    </style>
+</head>
+<body>
+
+<div id="pass-screen" class="overlay"><div class="login-box"><h2>CORE ACCESS 🔐</h2><input type="text" id="pass-input" placeholder="كلمة المرور"><button class="btn-3d" style="background:var(--accent-gold)" onclick="checkPass()">دخول</button></div></div>
+<div id="id-screen" class="overlay" style="display:none"><div class="login-box"><h2>ID LOGIN 🆔</h2><input type="text" id="id-input" placeholder="أدخل الـ ID (10 أرقام)"><button class="btn-3d" style="background:var(--accent-gold)" onclick="checkID()">تنشيط</button></div></div>
+
+<div id="main-game" style="display:none; flex-direction:column; height:100%">
+    <div class="header">المحاولات: <span id="att-count">3</span></div>
+    <div id="game-board"></div>
+    <div class="controls">
+        <button class="btn-3d" style="background:#7f8c8d; color:#fff" onclick="resetRow()">تراجع</button>
+        <button class="btn-3d" id="start-btn" style="background:var(--accent-gold)" onclick="startGame()">جولة جديدة</button>
+    </div>
+</div>
+
+<script>
+    const P1 = "403010";
+    let curRow = 0;
+
+    function checkPass() { 
+        if (document.getElementById('pass-input').value.trim() === P1) { 
+            document.getElementById('pass-screen').style.display = 'none'; 
+            document.getElementById('id-screen').style.display = 'flex'; 
+        } else { 
+            alert("كلمة المرور غير صحيحة!"); 
+        } 
+    }
+    
+    function checkID() { 
+        const idVal = document.getElementById('id-input').value.trim();
+        if (/^\d{10}$/.test(idVal)) { 
+            document.getElementById('id-screen').style.display = 'none'; 
+            document.getElementById('main-game').style.display = 'flex'; 
+            resetAtts(); 
+        } else { 
+            alert("يرجى إدخال ID يتكون من 10 أرقام!"); 
+        } 
+    }
+
+    function resetAtts() {
+        localStorage.setItem('app_v6', 3);
+        document.getElementById('att-count').innerText = 3;
+    }
+
+    function startGame() {
+        let atts = parseInt(localStorage.getItem('app_v6')) || 3;
+        if (atts <= 0) { alert("انتهت المحاولات! جاري التجديد..."); resetAtts(); return; }
+        
+        localStorage.setItem('app_v6', atts - 1);
+        document.getElementById('att-count').innerText = atts - 1;
+        
+        const board = document.getElementById('game-board');
+        board.innerHTML = '';
+        curRow = 0;
+        
+        for (let i = 0; i < 10; i++) {
+            const rDiv = document.createElement('div');
+            rDiv.className = 'row' + (i === 0 ? ' active' : '');
+            rDiv.id = 'r' + i;
+            let bombs = [0,1,2,3,4].sort(() => Math.random() - 0.5).slice(0, i < 4 ? 1 : 2);
+            for (let j = 0; j < 5; j++) {
+                const b = document.createElement('div');
+                b.className = 'brick';
+                b.onclick = () => { 
+                    if (i !== curRow) return;
+                    if (bombs.includes(j)) {
+                        b.style.background = '#e74c3c'; 
+                        b.innerText = '💣'; 
+                    } else {
+                        b.style.background = '#2ecc71'; 
+                        b.innerText = '🍎';
+                        document.getElementById('r'+curRow).classList.remove('active');
+                        curRow++;
+                        if(document.getElementById('r'+curRow)) document.getElementById('r'+curRow).classList.add('active');
+                    }
+                };
+                rDiv.appendChild(b);
+            }
+            board.appendChild(rDiv);
+        }
+    }
+    
+    function resetRow() { 
+        document.querySelectorAll('#r' + curRow + ' .brick').forEach(b => { 
+            b.style.background = '#2a2f3a'; 
+            b.innerText = ''; 
+        }); 
+    }
+</script>
+</body>
+</html>
