@@ -493,9 +493,9 @@
         }
     }
 
-    // --- 2. لعبة Gems & Mines (تم تعديل عدد القنابل هنا لتصبح قنبلتين في كل صف بدلاً من قنبلة واحدة) ---
+    // --- 2. لعبة Gems & Mines (تم تعديل إجمالي القنابل لتصبح قنبلتين فقط في الـ 25 خانة بالكامل) ---
     let curGemsRow = 0;
-    let gemsRowsData = [];
+    let gemsBombPositions = []; // لتخزين إحداثيات القنبلتين في الشبكة الكاملة (من 0 إلى 24)
 
     function renderGemsGridSetup() {
         const board = document.getElementById('game-board-gems');
@@ -503,13 +503,15 @@
         document.getElementById('gems-count').innerText = "0";
         document.getElementById('bombs-count').innerText = "0";
         curGemsRow = 0;
-        gemsRowsData = [];
+
+        // اختيار قنبلتين عشوائياً من إجمالي 25 خانة (من 0 إلى 24)
+        let allIndices = [];
+        for (let idx = 0; idx < 25; idx++) {
+            allIndices.push(idx);
+        }
+        gemsBombPositions = allIndices.sort(() => Math.random() - 0.5).slice(0, 2);
 
         for (let i = 0; i < 5; i++) {
-            // تعديل القنابل إلى 2 لكل صف (الإجمالي 10 قنابل في 25 خانة)
-            let bombs = [0,1,2,3,4].sort(() => Math.random() - 0.5).slice(0, 2);
-            gemsRowsData.push(bombs);
-
             const wrapper = document.createElement('div');
             wrapper.className = 'row-wrapper' + (i === 0 ? ' active' : '');
             wrapper.id = 'gems-row-' + i;
@@ -547,11 +549,11 @@
         const cells = wrapper.querySelectorAll('.cell-gem');
         wrapper.querySelector('.row-reveal-btn').style.display = 'none';
 
-        let bombs = gemsRowsData[rowIdx];
         let foundGems = 0, foundBombs = 0;
 
         for (let j = 0; j < 5; j++) {
-            if (bombs.includes(j)) {
+            let globalCellIndex = (rowIdx * 5) + j;
+            if (gemsBombPositions.includes(globalCellIndex)) {
                 cells[j].innerText = '💣';
                 cells[j].style.background = 'rgba(255,0,0,0.4)';
                 foundBombs++;
