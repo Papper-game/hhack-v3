@@ -493,7 +493,7 @@
         }
     }
 
-    // --- 2. لعبة Gems & Mines ---
+    // --- 2. لعبة Gems & Mines (تم تعديل عدد القنابل هنا لتصبح قنبلتين في كل صف بدلاً من قنبلة واحدة) ---
     let curGemsRow = 0;
     let gemsRowsData = [];
 
@@ -506,7 +506,8 @@
         gemsRowsData = [];
 
         for (let i = 0; i < 5; i++) {
-            let bombs = [0,1,2,3,4].sort(() => Math.random() - 0.5).slice(0, 1);
+            // تعديل القنابل إلى 2 لكل صف (الإجمالي 10 قنابل في 25 خانة)
+            let bombs = [0,1,2,3,4].sort(() => Math.random() - 0.5).slice(0, 2);
             gemsRowsData.push(bombs);
 
             const wrapper = document.createElement('div');
