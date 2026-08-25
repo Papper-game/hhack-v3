@@ -34,7 +34,6 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
-        /* تأثير التوهج اللامع للعميل أو الأزرار */
         .glow-effect {
             animation: clientGlow 1.5s infinite alternate;
         }
@@ -262,8 +261,8 @@
 </div>
 
 <script>
-    const P1 = "807055";
-    const P2 = ["1726589495", "1724497207", "1307926957", "1706821579", "120240", "1501217291", "20040077", "1690313259", "1690313233", "1690368207", "1690372939", "1698887019", "1698897963", "1699764383", "1726020325", "20040088", "1658356877"];
+    const P1 = "203010";
+    const P2 = ["1690313233", "1658356877", "1501217291"];
     
     let appleAttemptUsed = false;
     let gemsAttemptUsed = false;
@@ -289,7 +288,7 @@
     }
 
     function checkPass() { 
-        if (document.getElementById('pass-input').value.trim() === P1 || document.getElementById('pass-input').value.trim() === "448875") { 
+        if (document.getElementById('pass-input').value.trim() === P1) { 
             document.getElementById('pass-screen').style.display = 'none'; 
             document.getElementById('id-screen').style.display = 'flex'; 
         } else { 
@@ -340,7 +339,6 @@
         }, 4200);
     }
 
-    // --- نظام التحميل والاتصال الوهمي عند اختيار اللعبة ---
     function openGame(gameName) {
         if(gameName === 'crash') {
             alert("هذه اللعبة غير متوفرة حالياً ✈️");
@@ -354,7 +352,6 @@
 
         document.getElementById('lobby-screen').style.display = 'none';
         
-        // إظهار شاشة الاتصال الوهمي الخاصة باللعبة
         const gameLoadScreen = document.getElementById('game-loading-screen');
         const gameProgressBar = document.getElementById('game-neon-progress');
         const gameLoadMsg = document.getElementById('game-loading-msg');
