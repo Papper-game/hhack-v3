@@ -73,7 +73,7 @@
         .row-reveal-btn { background: var(--accent-gold); color: #000; border: none; padding: 6px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85rem; width: 100%; margin-top: 2px; }
         .row-reveal-btn:hover { background: #e6b800; }
 
-        /* Apple */
+        /* Apple (القديمة الأصلية بدون أي تعديل) */
         #game-board-apple { flex: 1; overflow-y: auto; display: flex; flex-direction: column-reverse; gap: 8px; padding: 10px; align-items: center; }
         .apple-brick { height: 40px; background: #2a2f3a; border-radius: 6px; border: 1px solid #444; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; }
         .revealed-apple { background: #1b4332 !important; border-color: #52b788 !important; }
@@ -83,7 +83,7 @@
         .gems-container { background: rgba(0, 10, 25, 0.98); border: 2px solid var(--accent-gold); padding: 20px 15px; border-radius: 25px; text-align: center; width: 340px; margin: auto; box-shadow: 0 0 15px rgba(255, 215, 0, 0.7); display: flex; flex-direction: column; gap: 10px; max-height: 85vh; overflow-y: auto; }
         .cell-gem { height: 45px; background: #0a1a2a; border: 1px solid #1a3a5a; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
 
-        /* Royal Feast (شبكة 25 خانة - 10 سم و 15 صح) */
+        /* Royal Feast (معدلة حسب طلبك الدقيق للأخطاء والصفوف) */
         .royal-container { background: #2b0000; padding: 20px 15px; border-radius: 20px; border: 2px solid #ffd700; width: 100%; max-width: 350px; margin: auto; text-align: center; box-shadow: 0 8px 16px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 10px; max-height: 85vh; overflow-y: auto; }
         .royal-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
         .cell-royal { height: 45px; background: radial-gradient(circle, #ffd700, #b8860b); border-radius: 8px; display: flex; justify-content: center; align-items: center; font-size: 1.3rem; border: 1px solid #5d4037; cursor: pointer; transition: 0.2s; }
@@ -120,7 +120,7 @@
         <div class="trial-badge"><span>⚡</span> نظام التفعيل الذكي للأكواد</div>
         <input type="text" id="pass-input" placeholder="كلمة المرور">
         <button class="btn-3d" style="background:var(--accent-gold); margin-top: 10px;" onclick="checkPass()">دخول</button>
-        <div class="version-tag">SYSTEM v7.3.0 [SECURE]</div>
+        <div class="version-tag">SYSTEM v7.3.1 [SECURE]</div>
     </div>
 </div>
 
@@ -148,7 +148,7 @@
         <h2>ID LOGIN 🆔</h2>
         <input type="text" id="id-input" placeholder="أدخل الـ ID">
         <button class="btn-3d" style="background:var(--accent-gold); margin-top: 10px;" onclick="checkID()">تنشيط الاتصال</button>
-        <div class="version-tag">CLIENT AUTH v7.3.0</div>
+        <div class="version-tag">CLIENT AUTH v7.3.1</div>
     </div>
 </div>
 
@@ -197,7 +197,7 @@
 <!-- حاوية الألعاب -->
 <div id="main-container" style="display:none; flex-direction:column; height:100%">
     
-    <!-- 1. لعبة Apple -->
+    <!-- 1. لعبة Apple (رجعت لشكلها القديم الأصلي تماماً بدون أي تعديل) -->
     <div id="game-apple" class="game-section" style="display:none; flex-direction:column; height:100%;">
         <div class="header">
             <button class="back-btn" onclick="returnToLobby()">⬅ القائمة</button>
@@ -229,7 +229,7 @@
         </div>
     </div>
 
-    <!-- 3. لعبة Royal Feast (10 سم، 15 صح) -->
+    <!-- 3. لعبة Royal Feast (المعدلة حسب الشروط الدقيقة للغلطات والصفوف) -->
     <div id="game-royal" class="game-section" style="display:none; flex-direction:column; height:100%;">
         <div class="header">
             <button class="back-btn" onclick="returnToLobby()">⬅ القائمة</button>
@@ -490,7 +490,7 @@
         updateAttemptsDisplay();
     }
 
-    // --- 1. لعبة Apple ---
+    // --- 1. لعبة Apple (تم إرجاعها لحالتها الأصلية تماماً بدون أي مساس) ---
     let curAppleRow = 0;
     let appleRowsData = [];
 
@@ -499,20 +499,14 @@
         board.innerHTML = '';
         curAppleRow = 0;
         appleRowsData = [];
-        
-        for (let i = 0; i < 10; i++) {
-            let bombCount;
-            if (i < 4) {
-                bombCount = 1;
-            } else if (i < 6) {
-                bombCount = 2;
-            } else if (i < 9) {
-                bombCount = 3;
-            } else {
-                bombCount = 4;
-            }
 
-            let bombs = [0,1,2,3,4].sort(() => Math.random() - 0.5).slice(0, bombCount);
+        for (let i = 0; i < 10; i++) {
+            let bombCount = Math.random() < 0.3 ? 2 : 1;
+            let bombs = [];
+            while(bombs.length < bombCount) {
+                let r = Math.floor(Math.random() * 5);
+                if(!bombs.includes(r)) bombs.push(r);
+            }
             appleRowsData.push(bombs);
 
             const wrapper = document.createElement('div');
@@ -653,19 +647,25 @@
         }
     }
 
-    // --- 3. لعبة Royal Feast (شبكة 25 خانة - 10 سم و 15 صح) ---
-    let royalPoisonPositions = [];
+    // --- 3. لعبة Royal Feast (المعدلة بالكامل حسب شروطك: صف واحد 3، صف واحد 1، 3 صفوف 2، والباقي متوازن وبدون 4 غلطات في صف) ---
+    let royalRowsData = [];
 
     function initRoyalGameSetup() {
         const board = document.getElementById('game-board-royal');
         board.innerHTML = "";
+        royalRowsData = [];
 
-        let allIndices = [];
-        for (let i = 0; i < 25; i++) {
-            allIndices.push(i);
+        // تقسيم 25 خلية على 5 صفوف (كل صف 5 خانات)
+        // شروطك: صف واحد 3 غلطات، صف واحد غلطة واحدة، 3 صفوف كل صف غلطتين (2) -> إجمالي 5 صفوف
+        let rowPoisonCounts = [3, 1, 2, 2, 2];
+        rowPoisonCounts.sort(() => Math.random() - 0.5);
+
+        for (let r = 0; r < 5; r++) {
+            let poisonCount = rowPoisonCounts[r];
+            let rowIndices = [0, 1, 2, 3, 4].map(col => (r * 5) + col);
+            let rowPoisons = rowIndices.sort(() => Math.random() - 0.5).slice(0, poisonCount);
+            royalRowsData.push(...rowPoisons);
         }
-        // عشوائياً نحدد 10 أطباق مسمومة (☠️) ويبقى 15 طبق صح
-        royalPoisonPositions = allIndices.sort(() => Math.random() - 0.5).slice(0, 10);
 
         for (let i = 0; i < 25; i++) {
             const cell = document.createElement('div');
@@ -686,7 +686,7 @@
 
         const foods = ["🍗", "🥩", "🍰", "🍕"];
 
-        if (royalPoisonPositions.includes(index)) {
+        if (royalRowsData.includes(index)) {
             cell.innerText = '☠️';
             cell.className = 'cell-royal revealed-poison';
         } else {
