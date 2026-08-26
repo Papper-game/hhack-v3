@@ -420,7 +420,7 @@
         return true;
     }
 
-    // --- 1. لعبة Apple ---
+    // --- 1. لعبة Apple (حسب القواعد الجديدة المحددة) ---
     let curAppleRow = 0;
     let appleRowsData = [];
 
@@ -431,7 +431,17 @@
         appleRowsData = [];
         
         for (let i = 0; i < 10; i++) {
-            let bombCount = i < 4 ? 1 : 2;
+            let bombCount;
+            if (i < 4) {
+                bombCount = 1; // الصفوف من 1 إلى 4: قنبلة واحدة
+            } else if (i < 6) {
+                bombCount = 2; // الصفوف 5 و 6: قنبلتان
+            } else if (i < 9) {
+                bombCount = 3; // الصفوف 7 و 8 و 9: 3 قنابل
+            } else {
+                bombCount = 4; // الصف العاشر (الأخير): 4 قنابل (تتبقى تفاحة واحدة صحيحة فقط)
+            }
+
             let bombs = [0,1,2,3,4].sort(() => Math.random() - 0.5).slice(0, bombCount);
             appleRowsData.push(bombs);
 
@@ -493,9 +503,9 @@
         }
     }
 
-    // --- 2. لعبة Gems & Mines (تم تعديل إجمالي القنابل لتصبح قنبلتين فقط في الـ 25 خانة بالكامل) ---
+    // --- 2. لعبة Gems & Mines ---
     let curGemsRow = 0;
-    let gemsBombPositions = []; // لتخزين إحداثيات القنبلتين في الشبكة الكاملة (من 0 إلى 24)
+    let gemsBombPositions = [];
 
     function renderGemsGridSetup() {
         const board = document.getElementById('game-board-gems');
@@ -504,7 +514,6 @@
         document.getElementById('bombs-count').innerText = "0";
         curGemsRow = 0;
 
-        // اختيار قنبلتين عشوائياً من إجمالي 25 خانة (من 0 إلى 24)
         let allIndices = [];
         for (let idx = 0; idx < 25; idx++) {
             allIndices.push(idx);
