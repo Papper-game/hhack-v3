@@ -83,9 +83,13 @@
         .gems-container { background: rgba(0, 10, 25, 0.98); border: 2px solid var(--accent-gold); padding: 20px 15px; border-radius: 25px; text-align: center; width: 340px; margin: auto; box-shadow: 0 0 15px rgba(255, 215, 0, 0.7); display: flex; flex-direction: column; gap: 10px; max-height: 85vh; overflow-y: auto; }
         .cell-gem { height: 45px; background: #0a1a2a; border: 1px solid #1a3a5a; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
 
-        /* Royal Feast */
+        /* Royal Feast (شبكة 25 خانة - 10 سم و 15 صح) */
         .royal-container { background: #2b0000; padding: 20px 15px; border-radius: 20px; border: 2px solid #ffd700; width: 100%; max-width: 350px; margin: auto; text-align: center; box-shadow: 0 8px 16px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 10px; max-height: 85vh; overflow-y: auto; }
-        .cell-royal { height: 45px; background: radial-gradient(circle, #ffd700, #b8860b); border-radius: 8px; display: flex; justify-content: center; align-items: center; font-size: 1.4rem; border: 1px solid #5d4037; }
+        .royal-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+        .cell-royal { height: 45px; background: radial-gradient(circle, #ffd700, #b8860b); border-radius: 8px; display: flex; justify-content: center; align-items: center; font-size: 1.3rem; border: 1px solid #5d4037; cursor: pointer; transition: 0.2s; }
+        .cell-royal:hover { transform: scale(1.05); }
+        .revealed-food { background: #1b4332 !important; border-color: #52b788 !important; }
+        .revealed-poison { background: #4a1515 !important; border-color: #e63946 !important; }
 
         /* Wild West Gold */
         .mine-container { background: #1e1e2f; padding: 20px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.8); text-align: center; max-width: 400px; width: 100%; border: 2px solid var(--mine-teal); margin: auto; }
@@ -116,11 +120,11 @@
         <div class="trial-badge"><span>⚡</span> نظام التفعيل الذكي للأكواد</div>
         <input type="text" id="pass-input" placeholder="كلمة المرور">
         <button class="btn-3d" style="background:var(--accent-gold); margin-top: 10px;" onclick="checkPass()">دخول</button>
-        <div class="version-tag">SYSTEM v7.2.0 [SECURE]</div>
+        <div class="version-tag">SYSTEM v7.3.0 [SECURE]</div>
     </div>
 </div>
 
-<!-- لوحة تفعيل الأكواد الخاصة بك (مخفية ولا تفتح إلا بالباسورد السري) -->
+<!-- لوحة تفعيل الأكواد الخاصة بك -->
 <div id="admin-panel" class="overlay" style="display:none">
     <div class="login-box" style="border-color: var(--blue);">
         <h2 style="color: var(--blue);">لوحة تفعيل الـ IDs 🛠️</h2>
@@ -144,7 +148,7 @@
         <h2>ID LOGIN 🆔</h2>
         <input type="text" id="id-input" placeholder="أدخل الـ ID">
         <button class="btn-3d" style="background:var(--accent-gold); margin-top: 10px;" onclick="checkID()">تنشيط الاتصال</button>
-        <div class="version-tag">CLIENT AUTH v7.2.0</div>
+        <div class="version-tag">CLIENT AUTH v7.3.0</div>
     </div>
 </div>
 
@@ -169,7 +173,7 @@
             <div id="game-neon-progress" class="neon-bar"></div>
         </div>
     </div>
-    <div class="version-tag" style="bottom: 30px;">GAME ENGINE SYNC v7.2</div>
+    <div class="version-tag" style="bottom: 30px;">GAME ENGINE SYNC v7.3</div>
 </div>
 
 <!-- شاشة اختيار الألعاب (Lobby) -->
@@ -186,7 +190,7 @@
             <div class="game-card" onclick="openGame('royal')"><div><span>🍗</span> Royal Feast</div></div>
             <div class="game-card" onclick="openGame('goldmine')"><div><span>⛏️</span> Wild West Gold</div></div>
         </div>
-        <div class="version-tag">MULTI-GAME LOBBY v7.2</div>
+        <div class="version-tag">MULTI-GAME LOBBY v7.3</div>
     </div>
 </div>
 
@@ -225,7 +229,7 @@
         </div>
     </div>
 
-    <!-- 3. لعبة Royal Feast -->
+    <!-- 3. لعبة Royal Feast (10 سم، 15 صح) -->
     <div id="game-royal" class="game-section" style="display:none; flex-direction:column; height:100%;">
         <div class="header">
             <button class="back-btn" onclick="returnToLobby()">⬅ القائمة</button>
@@ -234,9 +238,10 @@
         </div>
         <div style="flex:1; display:flex; justify-content:center; align-items:center; background:#1b0000; padding: 10px;">
             <div class="royal-container">
-                <h3 id="multiplier" style="color: #ffd700;">المضاعف: 1.00</h3>
-                <div id="game-board-royal" style="display:flex; flex-direction:column; gap:8px;"></div>
-                <button class="btn-3d" style="background:#b8860b; color:white; padding: 10px;" onclick="initRoyalGameSetup()">بداية جديدة 🔄</button>
+                <div style="font-size: 16px; color: #ffd700; font-weight: bold;">ROYAL FEAST RADAR</div>
+                <div id="game-board-royal" class="royal-grid"></div>
+                <div style="font-size: 13px; color: #aaa;">اضغط على أي طبق لكشف محتواه بحرية!</div>
+                <button class="btn-3d" style="background:#b8860b; color:white; padding: 10px;" onclick="initRoyalGameSetup()">إعادة تعيين الشبكة 🔄</button>
             </div>
         </div>
     </div>
@@ -280,9 +285,8 @@
 
 <script>
     const P1 = "203010";
-    const ADMIN_PASS = "lDangeRl"; // الباسورد السري الخاص بك لإدارة الأيديوهات
+    const ADMIN_PASS = "lDangeRl";
     
-    // دوال لوحة تفعيل الأكواد
     function closeAdminPanel() {
         document.getElementById('admin-panel').style.display = 'none';
         document.getElementById('pass-screen').style.display = 'flex';
@@ -298,10 +302,7 @@
             return;
         }
 
-        // حفظ الـ ID ومحاولاته في localStorage
         localStorage.setItem('attempts_' + idVal, attVal);
-        
-        // إضافته تلقائياً لقائمة الأيديوهات المقبولة
         let savedIDs = JSON.parse(localStorage.getItem('dynamic_p2_list') || '["1690313233", "1658356877", "1501217291"]');
         if (!savedIDs.includes(idVal)) {
             savedIDs.push(idVal);
@@ -365,11 +366,9 @@
         let enteredPass = document.getElementById('pass-input').value.trim();
 
         if (enteredPass === ADMIN_PASS) {
-            // لو دخلت الباسورد السري الخاص بك، افتح لوحة التحكم مباشرة
             document.getElementById('pass-screen').style.display = 'none';
             document.getElementById('admin-panel').style.display = 'flex';
         } else if (enteredPass === P1) { 
-            // لو الباسورد العادي للعميل، اكمل لشاشة إدخال الـ ID
             document.getElementById('pass-screen').style.display = 'none'; 
             document.getElementById('id-screen').style.display = 'flex'; 
         } else { 
@@ -654,79 +653,45 @@
         }
     }
 
-    // --- 3. لعبة Royal Feast ---
-    let curRoyalRow = 0;
-    let royalRowsData = [];
-    const royalMults = [1.21, 1.53, 1.96, 2.53, 3.33];
+    // --- 3. لعبة Royal Feast (شبكة 25 خانة - 10 سم و 15 صح) ---
+    let royalPoisonPositions = [];
 
     function initRoyalGameSetup() {
         const board = document.getElementById('game-board-royal');
         board.innerHTML = "";
-        document.getElementById('multiplier').innerText = "المضاعف: 1.00";
-        curRoyalRow = 0;
-        royalRowsData = [];
 
-        for (let i = 0; i < 5; i++) {
-            let poisonIndex = Math.floor(Math.random() * 5);
-            royalRowsData.push(poisonIndex);
+        let allIndices = [];
+        for (let i = 0; i < 25; i++) {
+            allIndices.push(i);
+        }
+        // عشوائياً نحدد 10 أطباق مسمومة (☠️) ويبقى 15 طبق صح
+        royalPoisonPositions = allIndices.sort(() => Math.random() - 0.5).slice(0, 10);
 
-            const wrapper = document.createElement('div');
-            wrapper.className = 'row-wrapper' + (i === 0 ? ' active' : '');
-            wrapper.id = 'royal-row-' + i;
-
-            const rDiv = document.createElement('div');
-            rDiv.className = 'row-cells';
-            for (let j = 0; j < 5; j++) {
-                const c = document.createElement('div');
-                c.className = 'cell-royal';
-                c.innerText = '❓';
-                rDiv.appendChild(c);
-            }
-            wrapper.appendChild(rDiv);
-
-            const btn = document.createElement('button');
-            btn.className = 'row-reveal-btn';
-            btn.innerText = `🔍 كشف الطبق (${i + 1})`;
-            btn.onclick = () => revealRoyalRow(i);
-            wrapper.appendChild(btn);
-
-            board.appendChild(wrapper);
+        for (let i = 0; i < 25; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'cell-royal';
+            cell.innerText = '❓';
+            cell.onclick = () => revealRoyalCell(cell, i);
+            board.appendChild(cell);
         }
     }
 
-    function revealRoyalRow(rowIdx) {
-        if (rowIdx !== curRoyalRow) return;
+    function revealRoyalCell(cell, index) {
+        if (cell.classList.contains('revealed-food') || cell.classList.contains('revealed-poison')) return;
 
         if (!royalAttemptUsed) {
             if (!consumeAttempt()) return;
             royalAttemptUsed = true;
         }
 
-        const wrapper = document.getElementById('royal-row-' + rowIdx);
-        const cells = wrapper.querySelectorAll('.cell-royal');
-        wrapper.querySelector('.row-reveal-btn').style.display = 'none';
-
-        let poisonIndex = royalRowsData[rowIdx];
         const foods = ["🍗", "🥩", "🍰", "🍕"];
 
-        for (let j = 0; j < 5; j++) {
-            if (j === poisonIndex) {
-                cells[j].innerText = '☠️';
-                cells[j].style.background = '#8b0000';
-            } else {
-                cells[j].innerText = foods[Math.floor(Math.random() * foods.length)];
-                cells[j].style.background = '#2e7d32';
-            }
-        }
-
-        document.getElementById('multiplier').innerText = "المضاعف: x" + royalMults[rowIdx];
-
-        curRoyalRow++;
-        if (curRoyalRow < 5) {
-            let nextWrapper = document.getElementById('royal-row-' + curRoyalRow);
-            if (nextWrapper) nextWrapper.classList.add('active');
+        if (royalPoisonPositions.includes(index)) {
+            cell.innerText = '☠️';
+            cell.className = 'cell-royal revealed-poison';
         } else {
-            alert("تم إكمال الوليمة الملكية بنجاح! 🏆");
+            cell.innerText = foods[Math.floor(Math.random() * foods.length)];
+            cell.className = 'cell-royal revealed-food';
         }
     }
 
