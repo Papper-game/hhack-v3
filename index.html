@@ -64,16 +64,18 @@
         .game-card div { display: flex; align-items: center; gap: 12px; }
         .game-card span { font-size: 1.4rem; }
 
-        .header { padding: 15px; background: #161b22; text-align: center; border-bottom: 2px solid var(--accent-gold); font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center; }
+        .header { padding: 12px 15px; background: #161b22; text-align: center; border-bottom: 2px solid var(--accent-gold); font-size: 1.1rem; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
         .back-btn { background: #333; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 0.9rem; }
         
-        .row-wrapper { width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 4px; opacity: 1; pointer-events: auto; }
-        .row-cells { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
-        .row-reveal-btn { background: var(--accent-gold); color: #000; border: none; padding: 6px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85rem; width: 100%; margin-top: 2px; display: none; }
+        /* تعديل حاويات صفوف التفاحة لتظهر بشكل مدمج ومتناسق مع زر الكشف */
+        .row-wrapper { width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 2px; opacity: 0.5; pointer-events: none; transition: 0.3s; }
+        .row-wrapper.active { opacity: 1; pointer-events: auto; }
+        .row-cells { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+        .row-reveal-btn { background: var(--accent-gold); color: #000; border: none; padding: 4px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 0.75rem; width: 100%; display: block; }
 
-        /* Apple */
-        #game-board-apple { flex: 1; overflow-y: auto; display: flex; flex-direction: column-reverse; gap: 8px; padding: 10px; align-items: center; }
-        .apple-brick { height: 40px; background: #2a2f3a; border-radius: 6px; border: 1px solid #444; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; }
+        /* Apple - تم ضبط المساحات لتسع الـ 10 صفوف وأزرار الكشف بدون اختفاء */
+        #game-board-apple { flex: 1; overflow-y: auto; display: flex; flex-direction: column-reverse; gap: 5px; padding: 8px; align-items: center; }
+        .apple-brick { height: 32px; background: #2a2f3a; border-radius: 5px; border: 1px solid #444; display: flex; justify-content: center; align-items: center; font-size: 1rem; }
         .revealed-apple { background: #1b4332 !important; border-color: #52b788 !important; }
         .revealed-bomb { background: #4a1515 !important; border-color: #e63946 !important; }
 
@@ -108,8 +110,8 @@
         .mine-btn { background: var(--mine-teal); color: #0f172a; border: none; padding: 10px 20px; font-size: 15px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; }
         .mine-btn:hover { background: #00b386; }
 
-        .controls { padding: 15px; background: #161b22; border-top: 2px solid #333; display: flex; gap: 10px; }
-        .btn-3d { padding: 15px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; color: #000; flex: 1; }
+        .controls { padding: 10px 15px; background: #161b22; border-top: 2px solid #333; display: flex; gap: 10px; flex-shrink: 0; }
+        .btn-3d { padding: 12px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; color: #000; flex: 1; }
         .btn-blue { background: transparent; color: var(--blue); border: 1px solid var(--blue); }
 
         .id-manage-table { width: 100%; margin-top: 5px; border-collapse: collapse; font-size: 0.8rem; text-align: right; }
@@ -235,7 +237,7 @@
 <!-- حاوية الألعاب -->
 <div id="main-container" style="display:none; flex-direction:column; height:100%">
     
-    <!-- 1. لعبة Apple -->
+    <!-- 1. لعبة Apple (تم إصلاح ظهور أزرار الكشف وضبط الحجم) -->
     <div id="game-apple" class="game-section" style="display:none; flex-direction:column; height:100%;">
         <div class="header">
             <button class="back-btn" onclick="returnToLobby()">⬅ القائمة</button>
@@ -248,7 +250,7 @@
         </div>
     </div>
 
-    <!-- 2. لعبة Gems & Mines (تم تعديلها لتصبح بقنبلتين فقط بالضغط الحر) -->
+    <!-- 2. لعبة Gems & Mines (بقنبلتين فقط بالضغط الحر) -->
     <div id="game-gems" class="game-section" style="display:none; flex-direction:column; height:100%;">
         <div class="header">
             <button class="back-btn" onclick="returnToLobby()">⬅ القائمة</button>
@@ -737,7 +739,7 @@
         }
     }
 
-    // 💎 لعبة Gems & Mines (تم ضبطها بقنبلتين فقط بالضغط الحر 5x5)
+    // 💎 لعبة Gems & Mines (بقنبلتين فقط بالضغط الحر 5x5)
     let gemsBombPositions = [];
 
     function renderGemsGridSetup() {
@@ -749,7 +751,6 @@
         for (let idx = 0; idx < 25; idx++) {
             allIndices.push(idx);
         }
-        // تم الضبط بدقة على قنبلتين فقط (2) من أصل 25 خانة
         gemsBombPositions = allIndices.sort(() => Math.random() - 0.5).slice(0, 2);
 
         for (let i = 0; i < 25; i++) {
@@ -884,10 +885,10 @@
             boxes[j].onclick = null;
             if (j === correctIndex) {
                 boxes[j].innerHTML = "🪙 ذهب";
-                boxes[j].className = "mine-box revealed-gold";
+                boxes.className = "mine-box revealed-gold";
             } else {
                 boxes.innerHTML = "🧨 ديناميت";
-                boxes[j].className = "mine-box revealed-bomb";
+                boxes.className = "mine-box revealed-bomb";
             }
         }
 
@@ -902,6 +903,19 @@
         document.getElementById('currentStepText').innerText = Math.min(mineCurrentStep + 1, mineTotalSteps);
     }
 
+    function activateMineContentStep() {
+        if (mineCurrentStep < mineTotalSteps) {
+            const row = document.getElementById(`row-${mineCurrentStep}`);
+            if (row) {
+                for (let box of row.children) {
+                    box.className = "mine-box active";
+                    box.innerText = "🔍 اكشف";
+                    box.onclick = () => revealMineStep(mineCurrentStep);
+                }
+            }
+        }
+    }
+    
     function activateMineCurrentStep() {
         if (mineCurrentStep < mineTotalSteps) {
             const row = document.getElementById(`row-${mineCurrentStep}`);
